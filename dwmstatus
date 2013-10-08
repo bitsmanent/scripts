@@ -1,0 +1,57 @@
+#!/bin/bash
+
+getbattery() {
+	enow=$(cat /sys/class/power_supply/BAT0/energy_now)
+	efull=$(cat /sys/class/power_supply/BAT0/energy_full)
+	vnow=$(cat /sys/class/power_supply/BAT0/voltage_now)
+
+	r=$(echo "($enow * 100 / $vnow) * 100 / ($efull * 100 / $vnow)" |bc)
+	echo "${r}%"
+}
+
+getiwlink() {
+	s=$(/sbin/iwconfig $1 |head -1 |tr -s " " '.' |cut -d'.' -f3)
+	if [ "$s" != "off" ]; then
+		r="$(/sbin/iwconfig $1 |grep Quality | sed 's/:\|=/./g' |tr -d [:alpha:],[:space:] |cut -d'.' -f2 |cut -d'/' -f1)%"
+	else
+		r="off"
+	fi
+
+	echo $r
+}
+
+getdate() {
+	date +'%d/%m/%Y %H:%M'
+}
+
+getfreq() {
+	freqs=$(cat /sys/devices/system/cpu/*/cpufreq/scaling_cur_freq)
+	freq=""
+	for f in $freqs
+	do
+		f="0.$(echo "$f / 10000" |bc)"
+		[ -z "$freq" ] && freq=$f || freq="${freq} $f"
+	done
+
+	echo $freq
+}
+
+gettemp() {
+	t=$(cat /sys/class/hwmon/hwmon*/device/temp1_input)
+	t=$(echo $t / 1000 |bc)
+	r=$(printf "%d" $t)
+	echo "${r}C"
+}
+
+main() {
+	battery=$(getbattery)
+	iwlink=$(getiwlink wlan0)
+	date=$(getdate)
+	freq=$(getfreq)
+	temp=$(gettemp)
+
+	status="F:[$freq] B:$battery T:$temp W:$iwlink $date"
+	echo "$status"
+}
+
+main "$@"

@@ -1,0 +1,24 @@
+#!/bin/bash
+
+SUSPEND_TO=mem
+BATTCRITIC=2
+
+suspend() {
+	echo -n $SUSPEND_TO > /sys/power/state
+}
+
+getbattery() {
+	enow=$(cat /sys/class/power_supply/BAT0/energy_now)
+	efull=$(cat /sys/class/power_supply/BAT0/energy_full)
+	vnow=$(cat /sys/class/power_supply/BAT0/voltage_now)
+
+	r=$(echo "($enow * 100 / $vnow) * 100 / ($efull * 100 / $vnow)" |bc)
+	echo $r
+}
+
+main() {
+	t=$(getbattery)
+	[ $t -lt $BATTCRITIC ] && suspend
+}
+
+main "$@"
