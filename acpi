@@ -1,10 +1,20 @@
 #!/bin/bash
 
-SUSPEND_TO=mem
+STATE=mem
 BATTCRITIC=2
+BATTWARNING=5
+ACDEVFILE=/sys/devices/pci0000:00/firmware_node/ACPI0003:00/power_supply/AC0/online
+
+acplugged() {
+	cat "$ACDEVFILE"
+}
+
+warning() {
+	xmessage -center "WARNING: battery level is ${t}%"
+}
 
 suspend() {
-	echo -n $SUSPEND_TO > /sys/power/state
+	echo -n $STATE > /sys/power/state
 }
 
 getbattery() {
@@ -17,8 +27,11 @@ getbattery() {
 }
 
 main() {
+	[ $(acplugged) -eq 1 ] && exit
 	t=$(getbattery)
+
 	[ $t -lt $BATTCRITIC ] && suspend
+	[ $t -lt $BATTWARNING ] && warning $t
 }
 
 main "$@"
