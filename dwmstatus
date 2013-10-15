@@ -24,16 +24,16 @@ getdate() {
 	date +'%d/%m/%Y %H:%M'
 }
 
-getfreq() {
+getfreqs() {
 	freqs=$(cat /sys/devices/system/cpu/*/cpufreq/scaling_cur_freq)
-	freq=""
+	ret=""
 	for f in $freqs
 	do
 		f="0.$(echo "$f / 10000" |bc)"
-		[ -z "$freq" ] && freq=$f || freq="${freq} $f"
+		[ -z "$ret" ] && ret=$f || ret="${ret} $f"
 	done
 
-	echo $freq
+	echo $ret
 }
 
 gettemp() {
@@ -47,10 +47,10 @@ main() {
 	battery=$(getbattery)
 	iwlink=$(getiwlink wlan0)
 	date=$(getdate)
-	freq=$(getfreq)
+	freqs=$(getfreqs)
 	temp=$(gettemp)
 
-	status="F:[$freq] B:$battery T:$temp W:$iwlink $date"
+	status="B:$battery T:$temp W:$iwlink ($freqs) $date"
 	echo "$status"
 }
 
