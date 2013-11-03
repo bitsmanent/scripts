@@ -1,0 +1,5 @@
+export PHP_FCGI_MAX_REQUESTS=1000
+export PHP_FCGI_CHILDREN=5
+
+[ $(pgrep -fl php5 |wc -l) -ne 0 ] && pkill -f php5-cgi
+su -c "/usr/bin/php5-cgi -b 127.0.0.1:9000" www-data &
