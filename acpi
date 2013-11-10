@@ -1,8 +1,8 @@
 #!/bin/bash
 
 STATE=mem
-BATTCRITIC=2
-BATTWARNING=5
+BATTCRITIC=3
+BATTWARNING=8
 ACDEVFILE=/sys/devices/pci0000:00/firmware_node/ACPI0003:00/power_supply/AC0/online
 
 acplugged() {
@@ -30,8 +30,8 @@ main() {
 	[ $(acplugged) -eq 1 ] && exit
 	t=$(getbattery)
 
-	[ $t -lt $BATTCRITIC ] && suspend
-	[ $t -lt $BATTWARNING ] && warning $t
+	[ $t -le $BATTCRITIC ] && suspend
+	[ $t -le $BATTWARNING ] && warning $t
 }
 
 main "$@"
