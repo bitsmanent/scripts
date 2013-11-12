@@ -5,11 +5,8 @@
 STATE=mem
 BATTCRITIC=3
 BATTWARNING=8
-ACDEVFILE=/sys/devices/pci0000:00/firmware_node/ACPI0003:00/power_supply/AC0/online
-
-acplugged() {
-	cat "$ACDEVFILE"
-}
+ACPLUGGED="$(cat /sys/devices/pci0000:00/firmware_node/ACPI0003:00/power_supply/AC0/online)"
+LIDSTATE="$(cat /proc/acpi/button/lid/LID/state |awk '{print $2}')"
 
 warning() {
 	xmessage -center "WARNING: battery level is ${t}%"
@@ -29,9 +26,10 @@ getbattery() {
 }
 
 main() {
-	[ $(acplugged) -eq 1 ] && exit
-	t=$(getbattery)
+	[ $LIDSTATE = "closed" ] && suspend
+	[ $ACPLUGGED -eq 1 ] && exit
 
+	t=$(getbattery)
 	[ $t -le $BATTCRITIC ] && suspend
 	[ $t -le $BATTWARNING ] && warning $t
 }
