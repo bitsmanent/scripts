@@ -1,4 +1,6 @@
 #!/bin/bash
+# TODO
+# o Handle closing lid
 
 STATE=mem
 BATTCRITIC=3
