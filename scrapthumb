@@ -1,0 +1,43 @@
+#!/bin/bash
+# Scrap Tumblr to get random images
+# Usage: feh -dF $(./scrapthumb)
+
+# TODO
+# - Allow more than JPEGs
+
+VIEWER=echo
+MAXIMGS=5
+
+# No trailing slash
+SOURCES=(
+	"http://tgfcp.tumblr.com"
+	"http://nakedbeachess.tumblr.com"
+)
+
+##
+# Do not edit below.
+##
+
+IMGS=()
+preload() {
+	i=0
+	mod=$(echo $MAXIMGS % ${#SOURCES[*]} |bc)
+	tot=$(echo $MAXIMGS / ${#SOURCES[*]} |bc)
+
+	for src in ${SOURCES[*]}
+	do
+		[ $i -eq 0 -a $mod -ne 0 ] && t=$(echo $tot + 1 | bc) || t=$tot
+		for n in $(seq 1 $t)
+		do
+			IMGS[$i]="$(wget -qO - "$src/random" |grep 'property="og:image"' | sed 's/.*content="\(.*.jpg)\)".*/\1/')"
+			i=$(echo $i+1|bc)
+		done
+	done
+}
+
+main() {
+	preload
+	$VIEWER ${IMGS[*]}
+}
+
+main "$@"
