@@ -13,9 +13,8 @@ Draw useful informations to the dwm bar.
 scrapthumb
 ----------
 Get random images from Tumblr.
-Example usage:
+Example usage in ~/.xinitrc:
 
-# ~/.xinitrc
 while true
 do
 	feh --bg-scale $(~/sources/scripts/scrapthumb -n1 -s http://desktopwallpaperproject.tumblr.com)
