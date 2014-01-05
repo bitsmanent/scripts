@@ -2,6 +2,11 @@
 # Scrap Tumblr to get random images
 # Usage: feh --bg-scale $(scrapthumb -n1 -s http://desktopwallpaperproject.tumblr.com)
 
+# TODO
+# - Randomize the sources (-r flag)
+# - Handle network errors
+
+GETTER="wget -t1 -qO -"
 VIEWER=echo
 MAXIMGS=5
 
@@ -26,7 +31,7 @@ preload() {
 		[ $i -eq 0 -a $mod -ne 0 ] && t=$(echo $tot + 1 | bc) || t=$tot
 		for n in $(seq 1 $t)
 		do
-			IMGS[$i]="$(wget -t 1 -qO - "$src/random" |grep -o 'property="og:image" content=".*"' |cut -b 29- |tr -d '"')"
+			IMGS[$i]="$($GETTER "$src/random" |grep -o 'property="og:image" content=".*"' |cut -b 29- |tr -d \")"
 			i=$(echo $i+1|bc)
 		done
 	done
