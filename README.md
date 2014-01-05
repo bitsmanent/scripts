@@ -12,14 +12,14 @@ Draw useful informations to the dwm bar.
 
 scrapthumb
 ----------
-Get random images from Tumblr.
+Get random images from Tumblr.  
 Example usage in ~/.xinitrc:
 
-while true
-do
-	feh --bg-scale $(~/sources/scripts/scrapthumb -n1 -s http://desktopwallpaperproject.tumblr.com)
-	sleep 1m
-done &
+	while true
+	do
+		feh --bg-scale $(~/sources/scripts/scrapthumb -n1 -s http://desktopwallpaperproject.tumblr.com)
+		sleep 1m
+	done &
 
 spawncgi
 --------
