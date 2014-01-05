@@ -32,9 +32,20 @@ preload() {
 	done
 }
 
+usage() {
+echo -n "Usage: $0 [-hns]
+-s 	Source
+-n	Number of items
+-h	Show this helps
+"
+
+exit 1
+}
+
 main() {
-	while getopts "n:s:" opt; do
+	while getopts "hn:s:" opt; do
 		case $opt in
+			h) usage;;
 			n) MAXIMGS=$OPTARG;;
 			s) SOURCES=($OPTARG);;
 		esac
