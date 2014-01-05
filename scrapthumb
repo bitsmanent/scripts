@@ -33,9 +33,10 @@ preload() {
 }
 
 main() {
-	while getopts "n:" opt; do
+	while getopts "n:s:" opt; do
 		case $opt in
 			n) MAXIMGS=$OPTARG;;
+			s) SOURCES=($OPTARG);;
 		esac
 	done
 
