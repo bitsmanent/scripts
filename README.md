@@ -17,7 +17,7 @@ Example usage in ~/.xinitrc:
 
 	while true
 	do
-		feh --bg-scale $(~/sources/scripts/scrapthumb -n1 -s http://desktopwallpaperproject.tumblr.com)
+		feh --bg-scale $(~/sources/scripts/scrapthumb -rn1)
 		sleep 1m
 	done &
 
