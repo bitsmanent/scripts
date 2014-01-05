@@ -2,9 +2,6 @@
 # Scrap Tumblr to get random images
 # Usage: feh -dF $(./scrapthumb)
 
-# TODO
-# - Allow more than JPEGs
-
 VIEWER=echo
 MAXIMGS=5
 
@@ -36,6 +33,12 @@ preload() {
 }
 
 main() {
+	while getopts "n:" opt; do
+		case $opt in
+			n) MAXIMGS=$OPTARG;;
+		esac
+	done
+
 	preload
 	$VIEWER ${IMGS[*]}
 }
