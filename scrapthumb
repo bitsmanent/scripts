@@ -3,12 +3,12 @@
 # Usage: feh --bg-scale $(scrapthumb -n1 -s http://desktopwallpaperproject.tumblr.com)
 
 # TODO
-# - Randomize the sources (-r flag)
 # - Handle network errors
 
 GETTER="wget -t1 -qO -"
 VIEWER=echo
 MAXIMGS=5
+RANDOMIZE=0
 
 # No trailing slash
 SOURCES=(
@@ -26,8 +26,15 @@ preload() {
 	s=0
 	for i in $(seq 0 $(echo $MAXIMGS - 1|bc))
 	do
+		if [ $RANDOMIZE -ne 0 ]; then
+			n=${#SOURCES[*]}
+			s=$(echo $RANDOM%$n|bc)
+		else
+			s=$(echo $s+1|bc)
+		fi
+
 		src=${SOURCES[$s]}
-		s=$(echo $s+1|bc)
+
 		[ $s -ge ${#SOURCES[*]} ] && s=0
 		IMGS[$i]="$($GETTER "$src/random" |grep -o 'property="og:image" content=".*"' |cut -b 29- |tr -d \")"
 	done
@@ -44,11 +51,12 @@ exit 1
 }
 
 main() {
-	while getopts "hn:s:" opt; do
+	while getopts "hn:s:r" opt; do
 		case $opt in
 			h) usage;;
 			n) MAXIMGS=$OPTARG;;
 			s) SOURCES=($OPTARG);;
+			r) RANDOMIZE=1;;
 		esac
 	done
 
