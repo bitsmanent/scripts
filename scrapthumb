@@ -23,18 +23,13 @@ SOURCES=(
 
 IMGS=()
 preload() {
-	i=0
-	mod=$(echo $MAXIMGS % ${#SOURCES[*]} |bc)
-	tot=$(echo $MAXIMGS / ${#SOURCES[*]} |bc)
-
-	for src in ${SOURCES[*]}
+	s=0
+	for i in $(seq 0 $(echo $MAXIMGS - 1|bc))
 	do
-		[ $i -eq 0 -a $mod -ne 0 ] && t=$(echo $tot + 1 | bc) || t=$tot
-		for n in $(seq 1 $t)
-		do
-			IMGS[$i]="$($GETTER "$src/random" |grep -o 'property="og:image" content=".*"' |cut -b 29- |tr -d \")"
-			i=$(echo $i+1|bc)
-		done
+		src=${SOURCES[$s]}
+		s=$(echo $s+1|bc)
+		[ $s -ge ${#SOURCES[*]} ] && s=0
+		IMGS[$i]="$($GETTER "$src/random" |grep -o 'property="og:image" content=".*"' |cut -b 29- |tr -d \")"
 	done
 }
 
