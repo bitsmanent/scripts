@@ -12,8 +12,9 @@ MAXIMGS=5
 
 # No trailing slash
 SOURCES=(
-	"http://tgfcp.tumblr.com"
-	"http://nakedbeachess.tumblr.com"
+	"http://desktopwallpaperproject.tumblr.com"
+	"http://wallpapermag.tumblr.com"
+	"http://hdwallpaper.1nation.eu"
 )
 
 ##
