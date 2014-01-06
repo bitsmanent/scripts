@@ -66,9 +66,6 @@ main() {
 
 	[ ${#SOURCES[*]} -eq 0 ] && SOURCES=${DEF_SOURCES[@]}
 
-	echo ${SOURCES[*]}
-	exit 0
-
 	preload
 	$VIEWER ${IMGS[*]}
 }
