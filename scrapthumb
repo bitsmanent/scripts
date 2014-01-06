@@ -43,8 +43,8 @@ preload() {
 }
 
 usage() {
-echo -n "Usage: $0 [-hns]
--s 	Source (can be specified multiple times)
+echo -n "Usage: $0 [-h] [-n <num>] [-s <source>] ...
+-s 	Source(s) (can be specified multiple times)
 -n	Number of items
 -h	Show this helps
 "
