@@ -44,7 +44,7 @@ preload() {
 
 usage() {
 echo -n "Usage: $0 [-hns]
--s 	Source
+-s 	Source (can be specified multiple times)
 -n	Number of items
 -h	Show this helps
 "
