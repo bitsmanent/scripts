@@ -64,7 +64,7 @@ main() {
 		esac
 	done
 
-	[ ${#SOURCES[*]} -eq 0 ] && SOURCES=${DEF_SOURCES[@]}
+	[ ${#SOURCES[@]} -eq 0 ] && SOURCES=$DEF_SOURCES
 
 	preload
 	$VIEWER ${IMGS[*]}
