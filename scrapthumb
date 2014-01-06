@@ -11,7 +11,7 @@ MAXIMGS=5
 RANDOMIZE=0
 
 # No trailing slash
-SOURCES=(
+DEF_SOURCES=(
 	"http://desktopwallpaperproject.tumblr.com"
 	"http://wallpapermag.tumblr.com"
 	"http://hdwallpaper.1nation.eu"
@@ -21,7 +21,9 @@ SOURCES=(
 # Do not edit below.
 ##
 
+SOURCES=()
 IMGS=()
+
 preload() {
 	s=0
 	for i in $(seq 0 $(echo $MAXIMGS - 1|bc))
@@ -35,7 +37,7 @@ preload() {
 
 		src=${SOURCES[$s]}
 
-		[ $s -ge ${#SOURCES[*]} ] && s=0
+		[ $s -ge ${#SOURCES[@]} ] && s=0
 		IMGS[$i]="$($GETTER "$src/random" |grep -o 'property="og:image" content=".*"' |cut -b 29- |tr -d \")"
 	done
 }
@@ -55,10 +57,17 @@ main() {
 		case $opt in
 			h) usage;;
 			n) MAXIMGS=$OPTARG;;
-			s) SOURCES=($OPTARG);;
+			s)
+				i=${#SOURCES[*]}
+				SOURCES[$i]=$OPTARG;;
 			r) RANDOMIZE=1;;
 		esac
 	done
+
+	[ ${#SOURCES[*]} -eq 0 ] && SOURCES=${DEF_SOURCES[@]}
+
+	echo ${SOURCES[*]}
+	exit 0
 
 	preload
 	$VIEWER ${IMGS[*]}
