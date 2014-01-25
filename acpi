@@ -28,8 +28,11 @@ main() {
 	[ $ACPLUGGED -eq 1 ] && exit
 
 	t=$(getbattery)
-	[ $t -le $BATTCRITIC ] && suspend
-	[ $t -le $BATTWARNING ] && warning $t
+	if [ $t -le $BATTCRITIC ]; then
+		suspend
+	elif [ $t -le $BATTWARNING ]; then
+		warning $t
+	fi
 }
 
 main "$@"
