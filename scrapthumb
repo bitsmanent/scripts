@@ -12,6 +12,7 @@ RANDOMIZE=0
 
 # No trailing slash
 DEF_SOURCES=(
+	"http://tumblr.com"
 	"http://desktopwallpaperproject.tumblr.com"
 	"http://wallpapermag.tumblr.com"
 	"http://hdwallpaper.1nation.eu"
@@ -26,19 +27,27 @@ IMGS=()
 
 preload() {
 	s=0
+	n=${#SOURCES[*]}
 	for i in $(seq 0 $(echo $MAXIMGS - 1|bc))
 	do
 		if [ $RANDOMIZE -ne 0 ]; then
-			n=${#SOURCES[*]}
 			s=$(echo $RANDOM%$n|bc)
 		else
-			s=$(echo $s+1|bc)
+			s=$(echo $RANDOM%1|bc)
 		fi
 
+		echo "$i $s ${SOURCES[*]}"
 		src=${SOURCES[$s]}
+		echo "[$src]"
 
 		[ $s -ge ${#SOURCES[@]} ] && s=0
-		IMGS[$i]="$($GETTER "$src/random" |grep -o 'property="og:image" content=".*"' |cut -b 29- |tr -d \")"
+
+		if [ "$src" = "http://tumblr.com" ]; then
+			IMGS[$i]="$($GETTER "$src" |grep -o 'id="fullscreen_post_image" src="[^ ]*"' |cut -b 32- |tr -d \")"
+		else
+			IMGS[$i]="$($GETTER "$src/random" |grep -o 'property="og:image" content="[^ ]*"' |cut -b 29- |tr -d \")"
+		fi
+
 	done
 }
 
