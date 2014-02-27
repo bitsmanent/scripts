@@ -18,7 +18,7 @@ Example usage in ~/.xinitrc:
 	# Change wallpaper each 5 minutes 
 	while true
 	do
-		feh --bg-fill $(~/sources/scripts/scrapthumb -rn1)
+		feh --bg-max $(~/sources/scripts/scrapthumb -rn1)
 		sleep 5m
 	done &
 
