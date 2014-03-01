@@ -1,6 +1,6 @@
 #!/bin/bash
 # Scrap Tumblr to get random images
-# Usage: feh --bg-max $(scrapthumb -n1 -s http://desktopwallpaperproject.tumblr.com)
+# Usage: feh --bg-fill $(scrapthumb -n1 -s http://desktopwallpaperproject.tumblr.com)
 
 # TODO
 # - Handle network errors
