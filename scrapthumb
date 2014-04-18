@@ -4,6 +4,8 @@
 
 # TODO
 # - Handle network errors
+# - Store source and file to $INFOBG (/tmp/.scrapthumb)
+# - Disable ~/.fehbg
 
 GETTER="wget -t1 -qO -"
 VIEWER=echo
@@ -43,7 +45,6 @@ preload() {
 		else
 			IMGS[$i]="$($GETTER "$src/random" |grep -o 'property="og:image" content="[^ ]*"' |cut -b 29- |tr -d \")"
 		fi
-
 	done
 }
 
