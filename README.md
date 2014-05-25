@@ -25,3 +25,7 @@ Example usage in ~/.xinitrc:
 spawncgi
 --------
 Spawn the CGI daemon.
+
+vegask
+------
+Get vegan people from Wikipedia. Written for fun.
