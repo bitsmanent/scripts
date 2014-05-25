@@ -43,8 +43,8 @@ exit 1
 
 show() {
 	item="$@"
-	name="$(echo $item |cut -d'|' -f1)"
-	profession="$(echo $item |cut -d'|' -f2)"
+	fullname="$(echo $item |cut -d'|' -f1)"
+	occupation="$(echo $item |cut -d'|' -f2)"
 	country="$(echo $item |cut -d'|' -f3)"
 	echo "$name, $profession. ($country)"
 }
