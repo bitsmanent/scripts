@@ -46,7 +46,7 @@ show() {
 	fullname="$(echo $item |cut -d'|' -f1)"
 	occupation="$(echo $item |cut -d'|' -f2)"
 	country="$(echo $item |cut -d'|' -f3)"
-	echo "$name, $profession. ($country)"
+	echo "$fullname, $occupation. ($country)"
 }
 
 pick() {
@@ -70,11 +70,10 @@ main() {
 	LIMIT=0
 	RANDOMIZE=0
 
-	while getopts "hulr1n:" opt; do
+	while getopts "hur1n:" opt; do
 		case $opt in
 			h) usage;;
 			u) UPDATE=1;;
-			l) LIMIT="$(wc -l $DB |cut -d' ' -f1)";;
 			n) LIMIT=$OPTARG;;
 			1) LIMIT=1;;
 			r) RANDOMIZE=1;;
