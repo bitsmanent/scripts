@@ -6,6 +6,8 @@
 # - Handle network errors
 # - Store source and file to $INFOBG (/tmp/.scrapthumb)
 # - Disable ~/.fehbg
+# - GIF support
+# - Transitions
 
 GETTER="wget -t1 -qO -"
 VIEWER=echo
