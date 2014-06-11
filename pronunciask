@@ -7,6 +7,15 @@ MP3BASE="http://it.forvo.com/player-mp3Handler.php?path="
 GETTER="wget -t1 --timeout=5 -q"
 TMP="/tmp/$(basename $0)"
 
+usage() {
+echo -n "Usage: $0 [-h] [-l <lang>] <word> ...
+-l <lang>	Set the language (default: $LANG)
+-h		Show this helps
+"
+
+exit 1
+}
+
 run() {
 	[ ! -d "$TMP" ] && mkdir "$TMP"
 	rm -f "${TMP}/*"
@@ -28,11 +37,14 @@ run() {
 }
 
 main() {
-	while getopts "l:" opt; do
+	while getopts "hl:" opt; do
 		case $opt in
-			l) LANG=$OPTARG; shift $(echo $OPTIND-1|bc);;
+			h) usage;;
+			l) LANG=$OPTARG;
 		esac
 	done
+
+	shift "$(echo $OPTIND-1|bc)"
 
 	run "$@"
 }
