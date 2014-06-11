@@ -1,0 +1,40 @@
+#!/bin/bash
+# Get pronunciations from forvo.com. Written for fun.
+
+LANG=en
+PLAYER="mplayer -quiet"
+MP3BASE="http://it.forvo.com/player-mp3Handler.php?path="
+GETTER="wget -t1 --timeout=5 -q"
+TMP="/tmp/$(basename $0)"
+
+run() {
+	[ ! -d "$TMP" ] && mkdir "$TMP"
+	rm -f "${TMP}/*"
+
+	n=0
+	for word in $@
+	do
+		n=$(echo $n+1|bc)
+		mp3=$($GETTER -O - "http://it.forvo.com/word/$word" |sed -n "/<abbr title=\"[^\"]*\">${LANG}<\/abbr>/,/<\/ul>/ p" |grep 'Play(' |head -1 |sed "s/.*Play([0-9]*,'\([^,]*\)','.*/\1/")
+		$GETTER -O "${TMP}/${n}" "${MP3BASE}${mp3}"
+	done
+
+	files=''
+	for i in $(seq 1 $n)
+	do
+		files="${files} ${TMP}/${i}"
+	done
+	$PLAYER $files
+}
+
+main() {
+	while getopts "l:" opt; do
+		case $opt in
+			l) LANG=$OPTARG; shift $(echo $OPTIND-1|bc);;
+		esac
+	done
+
+	run "$@"
+}
+
+main "$@"

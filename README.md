@@ -29,3 +29,7 @@ Spawn the CGI daemon.
 vegask
 ------
 Get vegan people from Wikipedia. Written for fun.
+
+pronunciask
+-----------
+Get pronunciations from forvo.com. Written for fun.
