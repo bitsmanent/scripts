@@ -13,12 +13,25 @@ Draw useful informations to the dwm bar.
 scrapthumb
 ----------
 Get random images from Tumblr.  
-Example usage in ~/.xinitrc:
+Some sample usages in ~/.xinitrc:
 
 	# Change wallpaper each 5 minutes 
 	while true
 	do
 		feh --bg-max $(~/sources/scripts/scrapthumb -rn1)
+		sleep 5m
+	done &
+
+	# Change wallpaper each 5 minutes by storing the source
+	# into /tmp/.scrapthumb (new with the -u flag)
+	while true
+	do
+		t="$(~/sources/scripts/scrapthumb -urn1)"
+		src=$(echo $t |cut -d'|' -f1)
+		img=$(echo $t |cut -d'|' -f2)
+		feh --no-fehbg --bg-fill "$img"
+		echo "$t" > /tmp/.scrapthumb
+
 		sleep 5m
 	done &
 
