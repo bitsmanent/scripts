@@ -10,9 +10,9 @@
 # - Transitions
 
 GETTER="wget -t1 -qO -"
-VIEWER=echo
 MAXIMGS=5
 RANDOMIZE=0
+WITHSOURCE=0
 
 # No trailing slash
 DEF_SOURCES=(
@@ -28,6 +28,7 @@ DEF_SOURCES=(
 
 SOURCES=()
 IMGS=()
+SRCS=()
 
 preload() {
 	s=0
@@ -35,13 +36,13 @@ preload() {
 	for i in $(seq 0 $(echo $MAXIMGS - 1|bc))
 	do
 		if [ $RANDOMIZE -ne 0 ]; then
-			s=$(echo $RANDOM%$n|bc)
+			s=$(echo ${RANDOM}%$n|bc)
 		else
-			s=$(echo $RANDOM%1|bc)
+			s=$(echo ${RANDOM}%1|bc)
 		fi
-
 		src=${SOURCES[$s]}
 
+		SRCS[$i]="$src"
 		if [ "$src" = "http://tumblr.com" ]; then
 			IMGS[$i]="$($GETTER "$src" |grep -o 'id="fullscreen_post_image" src="[^ ]*"' |cut -b 32- |tr -d \")"
 		else
@@ -54,6 +55,7 @@ usage() {
 echo -n "Usage: $0 [-h] [-n <num>] [-s <source>] ...
 -s 	Source(s) (can be specified multiple times)
 -n	Number of items
+-u	Also output the source (fmt: source|url)
 -h	Show this helps
 "
 
@@ -61,7 +63,7 @@ exit 1
 }
 
 main() {
-	while getopts "hn:s:r" opt; do
+	while getopts "hn:s:ru" opt; do
 		case $opt in
 			h) usage;;
 			n) MAXIMGS=$OPTARG;;
@@ -69,13 +71,21 @@ main() {
 				i=${#SOURCES[*]}
 				SOURCES[$i]=$OPTARG;;
 			r) RANDOMIZE=1;;
+			u) WITHSOURCE=1;;
 		esac
 	done
 
-	[ ${#SOURCES[@]} -eq 0 ] && SOURCES=$DEF_SOURCES
-
+	[ ${#SOURCES[@]} -eq 0 ] && SOURCES=(${DEF_SOURCES[@]})
 	preload
-	$VIEWER ${IMGS[*]}
+
+	for i in $(seq 0 $(echo ${#IMGS[*]} - 1|bc))
+	do
+		if [ $WITHSOURCE -eq 1 ]; then
+			echo -n "${SRCS[$i]}|"
+		fi
+
+		echo "${IMGS[$i]}"
+	done
 }
 
 main "$@"
