@@ -7,4 +7,4 @@ if [ $(id -u) -ne 0 ]; then
 fi
 
 [ $(pgrep -fl php5 |wc -l) -ne 0 ] && su -c "pkill -f php5-cgi"
-su -c "/usr/bin/php5-cgi -b 127.0.0.1:9000" www-data &
+sudo -u www-data /usr/bin/php5-cgi -b 127.0.0.1:9000 &
