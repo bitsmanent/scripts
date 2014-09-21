@@ -1,11 +1,9 @@
 #!/bin/bash
 # Scrap Tumblr to get random images
-# Usage: feh --bg-fill $(scrapthumb -n1 -s http://desktopwallpaperproject.tumblr.com)
+# Usage: feh --bg-fill --no-fehbg $(scrapthumb -run1) > /tmp/scrapthumb
 
 # TODO
 # - Handle network errors
-# - Store source and file to $INFOBG (/tmp/.scrapthumb)
-# - Disable ~/.fehbg
 # - GIF support
 # - Transitions
 
