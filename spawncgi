@@ -6,5 +6,5 @@ if [ "$(id -un)" != "www-data" ]; then
 	exit 1
 fi
 
-[ $(pgrep -fl php5 |wc -l) -ne 0 ] && pkill -f php5-cgi
+[ $(pgrep -fl php5 |wc -l) -ne 0 ] && pkill -9f php5-cgi
 /usr/bin/php5-cgi -b 127.0.0.1:9000 &
