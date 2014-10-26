@@ -46,3 +46,22 @@ Get vegan people from Wikipedia. Written for fun.
 pronunciask
 -----------
 Get pronunciations from forvo.com. Written for fun.
+
+iwpick
+------
+Connects to a network. Authentication is not mandatory and only WPA2 is supported at the moment. It will works with no pain on any Linux system equipped with iwconfig, dhclient and wpa_supplicant. Just run:
+
+	$ sudo iwpick -e MyWirelessNetwork -k MyWPA2key
+
+You may also use an aliases file (default ~/.networks), like this:
+
+	home:MyHomeNetwork:MyHomePassord
+	lucky:PublicNetwork
+	
+Then use the alias to connect:
+
+	$ sudo iwpick -a home
+
+*TIP: chmod og-rwx ~/.networks*
+
+I'm considering if implement or not a flag to connects to the best possible network. The priority should be, descending order: private known networks, public known networks, public unknown networks. Networks with higher security and/or signal have higher priority. For now it's just an idea.
