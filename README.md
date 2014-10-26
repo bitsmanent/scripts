@@ -62,6 +62,6 @@ Then use the alias to connect:
 
 	$ sudo iwpick -a home
 
-*TIP: chmod og-rwx ~/.networks*
+*TIP: $ chmod og-rwx ~/.networks*
 
 I'm considering if implement or not a flag to connects to the best possible network. The priority should be, descending order: private known networks, public known networks, public unknown networks. Networks with higher security and/or signal have higher priority. For now it's just an idea.
