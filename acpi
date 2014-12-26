@@ -1,8 +1,8 @@
 #!/bin/bash
 
 STATE=mem
-BATTCRITIC=3
-BATTWARNING=8
+BATTCRITIC=5
+BATTWARNING=10
 ACPLUGGED="$(cat $(du -a /sys/devices |grep 'AC0/online' |awk '{print $2}'))"
 LIDSTATE="$(cat /proc/acpi/button/lid/LID/state |awk '{print $2}')"
 
