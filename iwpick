@@ -21,7 +21,7 @@ connect() {
 			proto=RSN WPA
 			pairwise=CCMP TKIP
 		}" >> $tmp
-		wpa_supplicant -Dwext -i $iface -c "$tmp" -dd -B 2>&1 > /dev/null
+		wpa_supplicant -D nl80211 -i $iface -c "$tmp" -dd -B 2>&1 > /dev/null
 		rm $tmp
 	fi
 
