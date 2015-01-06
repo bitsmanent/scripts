@@ -43,14 +43,23 @@ gettemp() {
 	echo "${r}C"
 }
 
+getvol() {
+	fds=$(amixer get Master |tail -1  |sed 's/.*\[\([^ ]*\)\] \[\([^ ]*\)\] \[\([^ ]*\)\].*/\1|\2|\3/')
+	pct=$(echo $fds |cut -d'|' -f1)
+	dcbl=$(echo $fds |cut -d'|' -f2)
+	mute=$(echo $fds |cut -d'|' -f3)
+	[ "$mute" = "on" ] && echo $pct || echo "${pct}*"
+}
+
 main() {
 	battery=$(getbattery)
 	iwlink=$(getiwlink wlan0)
 	date=$(getdate)
 	freqs=$(getfreqs)
 	temp=$(gettemp)
+	vol=$(getvol)
 
-	status="B:$battery T:$temp W:$iwlink ($freqs) $date"
+	status="B:$battery T:$temp W:$iwlink V:$vol ($freqs) $date"
 	echo "$status"
 }
 
