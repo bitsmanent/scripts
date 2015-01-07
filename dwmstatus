@@ -29,7 +29,8 @@ getfreqs() {
 	ret=""
 	for f in $freqs
 	do
-		f="0.$(echo "$f / 10000" |bc)"
+		f="$(echo "$f / 100000" |bc)"
+		f=$(printf "0.%0.2d" $f)
 		[ -z "$ret" ] && ret=$f || ret="${ret} $f"
 	done
 
@@ -58,9 +59,7 @@ main() {
 	freqs=$(getfreqs)
 	temp=$(gettemp)
 	vol=$(getvol)
-
-	status="B:$battery T:$temp W:$iwlink V:$vol ($freqs) $date"
-	echo "$status"
+	printf "B:%s T:%s W:%s V:%-4s (%s) %s" "$battery" "$temp" "$iwlink" "$vol" "$freqs" "$date"
 }
 
 main "$@"
