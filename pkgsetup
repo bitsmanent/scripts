@@ -1,0 +1,273 @@
+#!/bin/sh
+#
+# See LICENSE file for copyright and license details.
+#
+# This scripts aim to simplify the installing and bootstrapping of the pkgsrc
+# framework on non-NetBSD systems. It also get the pkgsrc-wip directory and
+# allow to keep all update. Feel free to contribute.
+#
+# TODO
+#
+#	o Add saving output to log file.
+#	o Add nice(1) support.
+#	o Replace "cvs" whit VCS_CMD, VCS_OPTS, etc.
+#	o Enable verbose flags for all *_CMD if -v.
+#	o Catch bootstrap error (see http://wiki.netbsd.org/pkgsrc/how_to_use_pkgsrc_on_linux/#index12h1)
+#
+
+##
+# Configuration values.
+##
+
+# Local paths
+BASE="$HOME/sources/pkgsrc"
+PKGS="$BASE/pkgs"
+BINS="$BASE/bins"
+TARBALL="$BASE/pkgsrc.tar.bz2"
+
+# Fetch command and tarball
+FETCH_CMD="wget" 
+FETCH_OPT="-cqO $TARBALL"
+FETCH_FILE="ftp://ftp.netbsd.org/pub/pkgsrc/current/pkgsrc.tar.bz2"
+
+# Extract command
+EXT_CMD="tar"
+EXT_OPT="jxf"
+EXT_BOPT="-C $BASE"
+
+# SourceForge username
+USERNAME=anonymous
+
+##
+# Globals
+##
+VERBOSE=0
+UP_BASE=0
+UP_WIP=0
+
+# Show an error and exit.
+err() {
+	[ $VERBOSE -gt 1 ] && echo "Operation failed."
+	exit 1
+}
+
+# Show the configuration and if it applies to the working framework.
+do_show_conf() {
+	echo "
+Script configuration:
+
+Base dir: $BASE
+Packages: $PKGS
+Binaries: $BINS
+	"
+
+	if [ ! -d "$BASE" -o ! -d "$BINS" -o ! -d "$PKGS" ]; then
+		echo "This don't applies to a known framework."
+	else
+		echo "This applies to the framework in '$BASE'."
+	fi
+}
+
+# Show few suggestions.
+do_suggest() {
+	echo "
+It's likely that you want to add the following to your
+$BINS/usr/pkg/etc/mk.conf file:
+
+   FETCH_CMD=wget
+   FETCH_BEFORE_ARGS=-4 -nd
+   FETCH_OUTPUT_ARGS=-O
+   FETCH_RESUME_ARGS=-c
+   PKG_RESUME_TRANSFERS=YES
+
+To include man pages of packages you may need set the MANPATH environment
+variable or change the man(1) configuration file, by adding the following
+path:
+
+   $BINS/usr/pkg/man
+   
+You may also want to add the following to your ~/.profile:
+
+   export PATH="\$PATH:$BINS/usr/pkg/bin:$BINS/usr/pkg/sbin"
+
+For more informations read the documentation about pkgsrc{-wip}, man interface,
+shell, etc.
+	"
+}
+
+# Remove the whole framework.
+do_deinstall() {
+	[ $VERBOSE -gt 0 ] && echo "Deinstalling the framework..."
+
+	if [ -d "$BASE/pkgsrc" ]; then
+		[ $VERBOSE -gt 1 ] && echo "Removing $BASE/pkgsrc..."
+		rm -rf "$BASE/pkgsrc"
+	fi
+	if [ -d "$PKGS" ]; then
+		[ $VERBOSE -gt 1 ] && echo "Removing $PKGS..."
+		rm -rf "$PKGS"
+	fi
+	if [ -d "$BINS" ]; then
+		[ $VERBOSE -gt 1 ] && echo "Removing $BINS..."
+		rm -rf "$BINS"
+	fi
+}
+
+# Prepare the builds of the framework. Fetch and extract the tarball. Finally
+# creates the $BASE directory.
+do_prepare() {
+	mkdir -p "$BASE"
+
+	# Fetch the tarball
+	[ $VERBOSE -gt 1 ] && echo "Fetching the tarball ($(basename $TARBALL))..."
+	"$FETCH_CMD" $FETCH_OPT "$FETCH_FILE"
+	[ $? -ne 0 ] && err
+
+	# Extract the tarball
+	[ $VERBOSE -gt 1 ] && echo "Extracting the tarball to $PKGS..."
+	"$EXT_CMD" $EXT_OPT "$TARBALL" $EXT_BOPT
+	mv "$BASE/pkgsrc" "$PKGS"
+	[ $? -ne 0 ] && err
+}
+
+# Bootstrap pkgsrc.
+do_bootstrap() {
+	[ $VERBOSE -gt 1 ] && echo "Bootsrapping pkgsrc..."
+
+	cd "$PKGS/bootstrap"
+	[ -d "$PKGS/bootstrap/work" ] && . "$PKGS/bootstrap/cleanup" && rm -rf "$BINS"
+
+	./bootstrap	--unprivileged				\
+			--prefix="$BINS/usr/pkg"		\
+			--pkgdbdir="$BINS/var/db/pkg"		\
+			--sysconfdir="$BINS/usr/pkg/etc"	\
+			--varbase="$BINS/var"			\
+			2>&1 > /dev/null
+	[ $? -ne 0 ] && err
+
+	do_suggest
+}
+
+# Update the selected tree(s).
+do_update() {
+	[ $UP_BASE -eq 0 -a $UP_WIP -eq 0 ] && echo "You have to specify at least one of -w or -b." && err
+
+	[ $VERBOSE -gt 0 ] && echo "Updating the pkgsrc tree..."
+
+	cd "$PKGS"
+
+	# Base
+	if [ $UP_BASE -ne 0 ]; then
+		[ $VERBOSE -gt 1 ] && echo "Updating base..."
+		cvs up
+	fi
+
+	# Pkgsrc-wip
+	if [ $UP_WIP -ne 0 ]; then
+
+		[ $VERBOSE -gt 1 ] && echo "Updating wip..."
+
+		if [ -d "$PKGS/wip" ]; then
+			[ $VERBOSE -gt 2 ] && echo "The pkgsrc-wip tree already exists. Updating..."
+			cvs up
+		else
+
+			[ -z "$USERNAME" ] && echo "You have to specify the username. See the -U flag." && err
+
+			[ $VERBOSE -gt 2 ] && echo "No pkgsrc-wip tree. First checkout..."
+			cvs -d :ext:$USERNAME@pkgsrc-wip.cvs.sourceforge.net:/cvsroot/pkgsrc-wip co -P wip
+		fi
+	fi
+
+}
+
+# Show the usage.
+usage() {
+	echo "Usage: $0 [-ubwidvVh]"
+
+	[ -z "$1" ] && exit 1
+
+	echo "
+Options:
+   -u\t\t: update the selected tree(s)
+   -b\t\t: select the base tree for update
+   -w\t\t: select the -wip tree for update
+   -i\t\t: install the framework (fetch and extract the tarball first)
+   -d\t\t: deinstall the framework (use this only if you know what you are doing)
+   -c\t\t: cleanup the base directory from unused files
+   -s\t\t: print the suggestions (usually shown after bootstrap)
+   -S\t\t: show the actual configuration
+   -B\t\t: just bootstrap pkgsrc (use with caution)
+   -U <user>\t: specify the pkgsrc-wip CVS username
+   -v\t\t: Enable verbose. Specify it more times to be more verbose.
+   -V\t\t: show version informations
+   -h\t\t: print this help
+	"
+
+	exit 1
+}
+
+# Remove unused files.
+do_cleanup() {
+	[ $VERBOSE -gt 0 ] && echo "Cleaning up..."
+	rm -rf "$TARBALL"
+}
+
+# The main function.
+main() {
+	deinstall=0
+	prepare=0
+	bootstrap=0
+	update=0
+	cleanup=0
+
+	while getopts "ubwidcsSBU:vVh" arg
+	do
+		case $arg in
+			u) update=1 ;;
+			b) UP_BASE=1;;
+			w) UP_WIP=1;;
+			i) # Install
+				if [ $deinstall -eq 0 -a -d "$PKGS" -o -d "$BINS" ]; then
+				echo "
+Dirty base directory. You have to deinstall the framework first. If you already
+installed it but didn't bootstrap pkgsrc, then you may want to just bootstrap
+it, saving lots of time. In this case, just run: $0 -B
+If unsure, reinstall the whole framework with the following command: $0 -di
+"
+				exit 1
+	fi
+				prepare=1
+				bootstrap=1
+				update=1
+				;;
+
+			d) deinstall=1;;
+			c) cleanup=1;;
+			s) do_suggest;;
+			S) do_show_conf;;
+			B) bootstrap=1;;
+			U) USERNAME="$OPTARG";;
+			v) VERBOSE=$(echo $VERBOSE+1|bc);;
+			V)
+				echo "Pkgsetup-0.0.2 (C) $(date +'%Y') Claudio M. Alessi"
+				exit 0
+				;;
+			h) usage 1;;
+			*) usage;;
+		esac
+	done
+
+	[ $prepare -eq 0 -a ! -d "$PKGS" ] && echo "No framework found. Install it first (see the -i flag)." && err
+
+	opdo=0
+	[ $deinstall -gt 0 ] &&	do_deinstall && opdo=$(echo $opdo+1|bc)
+	[ $prepare -gt 0 ] &&	do_prepare && opdo=$(echo $opdo+1|bc)
+	[ $bootstrap -gt 0 ] &&	do_bootstrap && opdo=$(echo $opdo+1|bc)
+	[ $update -gt 0 ] &&	do_update && opdo=$(echo $opdo+1|bc)
+	[ $cleanup -gt 0 ] &&	do_cleanup && opdo=$(echo $opdo+1|bc)
+
+	[ $opdo -gt 0 ] && echo "All done ($opdo of 5 phases)."
+}
+
+main "$@"

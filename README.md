@@ -66,3 +66,7 @@ pronunciask
 -----------
 Get pronunciations from forvo.com. Written for fun.
 
+pkgsetup
+--------
+Managing pkgsrc bootstrapping and installation an non-NetBSD systems. Also
+supports pkgsrc-wip.
