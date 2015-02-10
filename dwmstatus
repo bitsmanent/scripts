@@ -38,7 +38,8 @@ getfreqs() {
 }
 
 gettemp() {
-	t=$(cat /sys/class/hwmon/hwmon*/device/temp1_input)
+	# XXX handle more sensors
+	t=$(cat /sys/class/hwmon/hwmon*/temp1_input |head -1)
 	t=$(echo $t / 1000 |bc)
 	r=$(printf "%d" $t)
 	echo "${r}C"
