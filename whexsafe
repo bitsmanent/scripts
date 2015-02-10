@@ -1,0 +1,24 @@
+#!/bin/bash
+# Generates the web safe colors list in hexadecimal.
+
+main() {
+	rgb=(0 3 6 9 C F)
+	for r in $(seq 0 $(echo ${#rgb[@]} - 1|bc))
+	do
+		for g in $(seq 0 $(echo ${#rgb[@]} - 1|bc))
+		do
+			for b in $(seq 0 $(echo ${#rgb[@]} - 1|bc))
+			do
+				rh=${rgb[$r]}
+				gh=${rgb[$g]}
+				bh=${rgb[$b]}
+				rn=$(echo "${r}*51" | bc)
+				gn=$(echo "${g}*51" | bc)
+				bn=$(echo "${b}*51" | bc)
+				echo "#${rh}${gh}${bh} rgb(${rn}, ${gn}, ${bn})"
+			done
+		done
+	done
+}
+
+main

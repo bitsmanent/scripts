@@ -70,3 +70,7 @@ pkgsetup
 --------
 Managing pkgsrc bootstrapping and installation on non-NetBSD systems. Also
 supports pkgsrc-wip.
+
+whexsafe
+--------
+Generates the web safe colors list in hex and RGB formats.
