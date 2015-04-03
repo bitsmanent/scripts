@@ -267,7 +267,7 @@ If unsure, reinstall the whole framework with the following command: $0 -di
 	[ $update -gt 0 ] &&	do_update && opdo=$(echo $opdo+1|bc)
 	[ $cleanup -gt 0 ] &&	do_cleanup && opdo=$(echo $opdo+1|bc)
 
-	[ $opdo -gt 0 ] && echo "All done ($opdo of 5 phases)."
+	[ $opdo -gt 0 ] && echo "All done ($opdo of 5 phases)." || usage
 }
 
 main "$@"
