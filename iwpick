@@ -1,6 +1,6 @@
 #!/bin/bash
 # Connects to a network
-# Requires: wpa_supplicant, dhclient, iwconfig
+# Requires: wpa_supplicant, sdhcp, iwconfig
 
 connect() {
 	iface=$1
@@ -25,7 +25,7 @@ connect() {
 		rm $tmp
 	fi
 
-	dhclient $iface
+	sdhcp -d $iface >/dev/null
 }
 
 die() {
@@ -78,7 +78,7 @@ main() {
 
 	[ -z "$essid" ] && die "alias '${alias}' not found"
 
-	apps=(wpa_supplicant dhclient)
+	apps=(wpa_supplicant sdhcp)
 	for a in ${apps[@]}
 	do
 		pkill -f "$a"

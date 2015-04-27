@@ -4,7 +4,7 @@ Useful shell scripts.
 
 iwpick
 ------
-Connects to a network. Authentication is not mandatory and only WPA2 is supported at the moment. It will works with no pain on any Linux system equipped with iwconfig, dhclient and wpa_supplicant. Just run:
+Connects to a network. Authentication is not mandatory and only WPA2 is supported at the moment. It will works with no pain on any Linux system equipped with iwconfig, sdhcp and wpa_supplicant. Just run:
 
 	$ sudo iwpick -e MyWirelessNetwork -k MyWPA2key
 
