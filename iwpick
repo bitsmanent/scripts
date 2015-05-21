@@ -21,7 +21,7 @@ connect() {
 			proto=RSN WPA
 			pairwise=CCMP TKIP
 		}" >> $tmp
-		wpa_supplicant -D nl80211 -i $iface -c "$tmp" -dd -B 2>&1 > /dev/null
+		wpa_supplicant -i $iface -c "$tmp" -dd -B 2>&1 > /dev/null
 		rm $tmp
 	fi
 
@@ -72,7 +72,7 @@ main() {
 		key="$(echo $s |cut -sd: -f2)"
 	else
 		# If explicitly specified, check if the ESSID do exists
-		valid="$(iwlist wlan0 scan |grep ESSID |grep -wc $essid)"
+		valid="$(iwlist $iface scan |grep ESSID |grep -wc $essid)"
 		[ $valid -eq 0 ] && die "essid '$essid' is not valid"
 	fi
 
