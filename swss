@@ -1,0 +1,31 @@
+#!/bin/bash
+# simple web stack switch
+
+services=(
+	redis-server
+	mysql
+	nginx
+	php5-fpm
+)
+
+massact() {
+	act=$1
+	for s in ${services[@]}
+	do
+		service $s $1 &
+	done
+}
+
+main() {
+	case $1 in
+		start);;
+		stop);;
+		restart);;
+		status);;
+		*) echo "Usage: $0 [start|stop|restart|status]" ; exit 1 ;;
+	esac
+
+	massact $1
+}
+
+main "$@"

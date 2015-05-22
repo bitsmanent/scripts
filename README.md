@@ -74,3 +74,8 @@ supports pkgsrc-wip.
 whexsafe
 --------
 Generates the web safe colors list in hex and RGB formats.
+
+swss
+----
+Simple web stack switch. It just tiny script to start and stop a group of
+services which I use to deal with my web stack (redis, mysql, nginx, etc.).
