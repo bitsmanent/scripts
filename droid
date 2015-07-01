@@ -1,0 +1,125 @@
+#!/bin/sh
+# Sane Android development.
+
+# https://spring.io/guides/gs/gradle-android/
+
+BASEDIR="/home/claudio/sources/droid"
+
+SDKDIR="$BASEDIR/android-sdk-linux"
+GRADLE="$BASEDIR/gradle-2.3/bin/gradle"
+ADB="$SDKDIR/platform-tools/adb"
+SDK_URL=http://dl.google.com/android/android-sdk_r24.1.2-linux.tgz
+GRADLE_URL=https://services.gradle.org/distributions/gradle-2.3-bin.zip
+
+# Remove the need to have sdk.dir in local.properties
+# XXX If local.properties exists, it should have higher priority
+export ANDROID_HOME="$SDKDIR"
+
+_adb() {
+	# XXX if adb is not running as root, it must be started first
+	apk="./build/outputs/apk/$(basename $(pwd))-debug.apk"
+	$ADB "$@" "$apk"
+}
+
+do_setup() {
+	tmpd=/tmp/.droid
+	if [ ! -d "$tmpd" ]; then
+		mkdir "$tmpd"
+	fi
+	cd "$tmpd"
+
+	wget -O sdk.tgz -qc "$SDK_URL"
+	wget -O gradle.zip -qc "$GRADLE_URL"
+
+	[ ! -d "android-sdk-linux" ] && tar zxf sdk.tgz
+	[ ! -d "gradle-2.3" ] && unzip gradle.zip
+
+	# XXX remove the tarball
+
+	# Need to install the SDK tools, build tools and system image
+	$SDKDIR/tools/android
+
+	cd -
+}
+
+do_install() {
+	_adb install -r
+}
+
+do_uninstall() {
+	# XXX Actually doesn't works (Failure)
+	_adb uninstall
+}
+
+# XXX real device or emulator
+do_upload() {
+	# _adb push
+	echo 'upload'
+}
+
+do_build() {
+	rel=$1
+	[ $rel ] && task="assembleRelease"  || task="assembleDebug"
+	$GRADLE $task
+}
+
+do_upgrade() {
+	do_build
+	do_install
+}
+
+do_clean() {
+	rm -rf build
+}
+
+do_deploy() {
+	do_build 1
+	do_install
+}
+
+do_init() {
+	echo 'init'
+}
+
+die() {
+	echo "$0: $@"
+	exit 1
+}
+
+usage() {
+	echo "Usage: $0 <cmd>"
+
+	echo "
+Commands:
+   setup\t: creates the development environment
+   install\t: install the app into the device
+   upload\t: upload the app into the device
+   build\t: build the app (if no task, assumes assembleDebug) 
+   upgrade\t: build and install the app (assembleDebug)
+   deploy\t: build and install the app (assembleRelease)
+   init\t\t: create a new project into the current directory
+   clean\t: remove all builds
+   help\t\t: print this help
+	"
+
+	exit 1
+}
+
+main() {
+	cmd=$1
+	case $cmd in
+		setup) do_setup;;
+		install) do_install;;
+		uninstall) do_uninstall;;
+		upload) do_upload;;
+		build) do_build $2;;
+		upgrade) do_upgrade;;
+		deploy) do_deploy;;
+		init) do_init;;
+		clean) do_clean;;
+		help) usage;;
+		*) usage;;
+	esac
+}
+
+main "$@"
