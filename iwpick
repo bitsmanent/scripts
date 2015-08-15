@@ -30,7 +30,7 @@ connect() {
 
 	# sdhcp wait forever if $iface have no IP address. Workaround this.
 	t=$(ifconfig wlan0 |grep inet: |cut -d: -f2 |cut -d' ' -f1)
-	[ -z $t ] && echo 192.168.0.2 $iface
+	[ -z $t ] && ifconfig $iface 192.168.0.2
 
 	sdhcp -d $iface >/dev/null
 }
