@@ -8,7 +8,12 @@ LIDSTATE="$(cat /proc/acpi/button/lid/LID/state |awk '{print $2}')"
 
 warning() {
 	L=" OK "
-	xmessage -center -buttons "$L" -default "$L" "WARNING: battery level is ${t}%"
+	xmessage -center -buttons "$L" -default "$L" "WARNING: battery level is ${t}%" &
+
+	for i in $(seq 3)
+	do
+		play -qn synth 00:00.1 sine 500
+	done
 }
 
 suspend() {
