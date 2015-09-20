@@ -7,8 +7,11 @@ ACPLUGGED="$(cat $(du -a /sys/devices |grep 'AC0/online' |awk '{print $2}'))"
 LIDSTATE="$(cat /proc/acpi/button/lid/LID/state |awk '{print $2}')"
 
 warning() {
+	pct="$1"
 	L=" OK "
-	xmessage -center -buttons "$L" -default "$L" "WARNING: battery level is ${t}%" &
+
+	export DISPLAY=:0
+	xmessage -center -buttons "$L" -default "$L" "WARNING: battery level is ${pct}%" &
 
 	for i in $(seq 3)
 	do
