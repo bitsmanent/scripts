@@ -10,8 +10,7 @@ warning() {
 	pct="$1"
 	L=" OK "
 
-	export DISPLAY=:0
-	xmessage -center -buttons "$L" -default "$L" "WARNING: battery level is ${pct}%" &
+	xmessage -display :0 -center -buttons "$L" -default "$L" "WARNING: battery level is ${pct}%" &
 
 	for i in $(seq 3)
 	do
