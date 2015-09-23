@@ -6,7 +6,11 @@ getbattery() {
 	vnow=$(cat /sys/class/power_supply/BAT0/voltage_now)
 
 	r=$(echo "($enow * 100 / $vnow) * 100 / ($efull * 100 / $vnow)" |bc)
-	echo "${r}%"
+	acplugged="$(cat $(du -a /sys/devices |grep 'AC0/online' |awk '{print $2}'))"
+
+	r="${r}%"
+	[ $acplugged -eq 1 ] && r="${r}+" || r="${r}-"
+	echo "$r"
 }
 
 getiwlink() {
