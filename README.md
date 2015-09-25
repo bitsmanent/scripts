@@ -66,12 +66,12 @@ B:89%+ T:56C W:70% V:95%  (0.23 0.21 0.22 0.16) 25/09/2015 11:15
 
 Here is a brief explanations of the fields:
 
-B: battery percentage. A trailing symbol indicates that AC power is plugged (+) or not (-)
-T: temperature in celsius degrees
-W: wireless signal
-V: volume. A trailing asterisk indicates if the mute is on
-Load average between parenthesis
-Date and time
+- B: battery percentage. A trailing symbol indicates that AC power is plugged (+) or not (-)
+- T: temperature in celsius degrees
+- W: wireless signal
+- V: volume. A trailing asterisk indicates if the mute is on
+- Load average between parenthesis
+- Date and time
 
 To set the dwm bar you have to call xsetroot, like this:
 ```
