@@ -52,7 +52,11 @@ Some sample usages in ~/.xinitrc:
 
 acpi
 ----
-Suspend the system if battery is critical.
+Notice the user if the battery charge is below 12% or suspend (in memory) the
+system if the battery is below 9%. Make it runs each minute via cron like this:
+```
+* * * * * /path/of/acpi
+```
 
 dwmstatus
 ---------
