@@ -60,7 +60,20 @@ system if the battery is below 9%. Make it runs each minute via cron like this:
 
 dwmstatus
 ---------
-Draw useful informations to the dwm bar.
+Draw useful informations to the dwm bar. Sample output:
+```
+B:89%+ T:56C W:70% V:95%  (0.23 0.21 0.22 0.16) 25/09/2015 11:15
+```
+
+Here is a brief explanations of the fields:
+
+B: battery percentage. A trailing symbol indicates that AC power is plugged (+) or not (-)
+T: temperature (celsius degrees)
+W: wireless signal
+V: volume. A trailing asterisk indicates that the mute is on.
+
+Finally, there is the load average between parethesis followed by date and
+time.
 
 spawncgi
 --------
