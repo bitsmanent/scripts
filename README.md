@@ -31,16 +31,14 @@ Get random images from Tumblr.
 Some sample usages in ~/.xinitrc:
 
 	# Change wallpaper each 5 minutes 
-	while true
-	do
+	while true; do
 		feh --bg-max $(~/sources/scripts/scrapthumb -rn1)
 		sleep 5m
 	done &
 
 	# Change wallpaper each 5 minutes by storing the source
 	# into /tmp/.scrapthumb (new with the -u flag)
-	while true
-	do
+	while true; do
 		t="$(~/sources/scripts/scrapthumb -urn1)"
 		src=$(echo $t |cut -d'|' -f1)
 		img=$(echo $t |cut -d'|' -f2)
@@ -60,7 +58,8 @@ system if the battery is below 9%. Make it runs each minute via cron like this:
 
 dwmstatus
 ---------
-Draw useful informations to the dwm bar. Sample output:
+Output useful informations suitable for a status bar. It's designed for dwm.
+Sample output:
 ```
 B:89%+ T:56C W:70% V:95%  (0.23 0.21 0.22 0.16) 25/09/2015 11:15
 ```
@@ -68,12 +67,24 @@ B:89%+ T:56C W:70% V:95%  (0.23 0.21 0.22 0.16) 25/09/2015 11:15
 Here is a brief explanations of the fields:
 
 B: battery percentage. A trailing symbol indicates that AC power is plugged (+) or not (-)
-T: temperature (celsius degrees)
+T: temperature in celsius degrees
 W: wireless signal
-V: volume. A trailing asterisk indicates that the mute is on.
+V: volume. A trailing asterisk indicates if the mute is on
+Load average between parenthesis
+Date and time
 
-Finally, there is the load average between parethesis followed by date and
-time.
+To set the dwm bar you have to call xsetroot, like this:
+```
+xsetroot -name "$(/path/of/dwmstatus)"
+```
+
+It's easy to auto-update the bar by putting this in your ~/.xinitrc:
+```
+while true; do
+	xsetroot -name "$(/path/of/dwmstatus)"
+	sleep 30s
+done &
+```
 
 spawncgi
 --------
