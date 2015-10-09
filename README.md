@@ -48,6 +48,10 @@ Some sample usages in ~/.xinitrc:
 		sleep 5m
 	done &
 
+You can achieve more extreme results by using scrapthumb in conjunction with
+semi-automatic customization tool. Have a look at
+[autotheme.sh](https://github.com/neeasade/autotheme.sh).
+
 acpi
 ----
 Notice the user if the battery charge is below 12% or suspend (in memory) the
