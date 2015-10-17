@@ -1,23 +1,24 @@
 #!/bin/sh
 # TODO: multisel
 
-TARGET="$1"
-[ -z "$TARGET" ] && TARGET=.
+target="$1"
+[ -z "$target" ] && target=.
 
 while true; do
-	if [ ! -d "$TARGET" ]; then
-		mimeopen "$TARGET"
-		exit 0
+	sel="$(ls -1a "$target" |grep -v '^\.$' | dmenu -l 25)"
+	ec=$?
+	[ "$ec" -ne 0 ] && exit $ec
+
+	c="$(echo "$sel" |cut -b1)"
+	if [ "$c" = "/" ]; then
+		newt="$sel"
+	else
+		newt="$(realpath "${target}/${sel}")"
 	fi
 
-	# skip non-existing files
-	ne=true
-	while "$ne"; do
-		sel="$(ls -1a "$TARGET" |grep -v '^\.$' | dmenu -l 25)"
-		ec=$?
-		[ "$ec" -ne 0 ] && exit $ec
-		[ -e "${TARGET}/${sel}" ] && ne=false
-	done
-
-	TARGET="${TARGET}/${sel}"
+	[ -e "$newt" ] && target="$newt"
+	if [ ! -d "$target" ]; then
+		mimeopen "$target"
+		exit 0
+	fi
 done
