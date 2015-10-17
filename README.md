@@ -118,7 +118,7 @@ Sane Android Development.
 
 browse
 ------
-Little dmenu-based file browser which output selected file.
+Little dmenu-based file browser which output the selected file (if any).
 
 Sample usage:
 
