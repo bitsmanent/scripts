@@ -115,3 +115,7 @@ services which I use to deal with my web stack (redis, mysql, nginx, etc.).
 droid
 -----
 Sane Android Development.
+
+browse
+------
+Little dmenu-based file browser which uses MIME to open files.

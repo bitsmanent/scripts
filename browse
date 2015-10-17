@@ -1,0 +1,19 @@
+#!/bin/sh
+# TODO: multisel
+
+TARGET="$1"
+[ -z "$TARGET" ] && TARGET=.
+run=true
+
+while "$run"; do
+	if [ ! -d "$TARGET" ]; then
+		mimeopen "$TARGET"
+		exit 0
+	fi
+
+	cd "$TARGET"
+	sel="$(ls -1a "$TARGET" |grep -v '^\.$' | dmenu -l 25)"
+	ec=$?
+	[ "$ec" -ne 0 ] && exit $ec
+	TARGET="$(realpath "$sel")"
+done
