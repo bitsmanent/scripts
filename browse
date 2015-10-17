@@ -3,9 +3,8 @@
 
 TARGET="$1"
 [ -z "$TARGET" ] && TARGET=.
-run=true
 
-while "$run"; do
+while true; do
 	if [ ! -d "$TARGET" ]; then
 		mimeopen "$TARGET"
 		exit 0
