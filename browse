@@ -16,9 +16,11 @@ while true; do
 		newt="$(realpath "${target}/${sel}")"
 	fi
 
-	[ -e "$newt" ] && target="$newt"
-	if [ ! -d "$target" ]; then
-		mimeopen "$target"
-		exit 0
+	if [ -e "$newt" ]; then
+		target="$newt"
+		if [ ! -d "$target" ]; then
+			mimeopen "$target"
+			exit 0
+		fi
 	fi
 done
