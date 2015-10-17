@@ -19,7 +19,7 @@ while true; do
 	if [ -e "$newt" ]; then
 		target="$newt"
 		if [ ! -d "$target" ]; then
-			mimeopen "$target"
+			echo "$target"
 			exit 0
 		fi
 	fi

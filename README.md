@@ -118,4 +118,10 @@ Sane Android Development.
 
 browse
 ------
-Little dmenu-based file browser which uses MIME to open files.
+Little dmenu-based file browser which output selected file.
+
+Sample usage:
+
+```
+$ mimeopen "$(/path/of/browse)"
+```
