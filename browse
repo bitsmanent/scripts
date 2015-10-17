@@ -10,8 +10,14 @@ while true; do
 		exit 0
 	fi
 
-	sel="$(ls -1a "$TARGET" |grep -v '^\.$' | dmenu -l 25)"
-	ec=$?
-	[ "$ec" -ne 0 ] && exit $ec
+	# skip non-existing files
+	ne=true
+	while "$ne"; do
+		sel="$(ls -1a "$TARGET" |grep -v '^\.$' | dmenu -l 25)"
+		ec=$?
+		[ "$ec" -ne 0 ] && exit $ec
+		[ -e "${TARGET}/${sel}" ] && ne=false
+	done
+
 	TARGET="${TARGET}/${sel}"
 done
