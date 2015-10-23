@@ -125,3 +125,10 @@ Sample usage:
 ```
 $ mimeopen "$(/path/of/browse)"
 ```
+
+For [dwm](http://dwm.suckless.org) users, it may come in handy a key binding
+like this:
+
+```
+{ MODKEY|ShiftMask,		XK_o,      spawn,          SHCMD("mimeopen -n \"$(/path/of/browse)\"") },
+```
