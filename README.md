@@ -132,3 +132,8 @@ like this:
 ```
 { MODKEY|ShiftMask,		XK_o,      spawn,          SHCMD("mimeopen -n \"$(/path/of/browse)\"") },
 ```
+
+diffmon
+-------
+Simple script which monitor a file and show lines that are changed since you
+ran it.

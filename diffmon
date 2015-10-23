@@ -1,0 +1,15 @@
+#!/bin/sh
+# Monitor a file and show changed lines.
+
+file="$1"
+
+if [ -z "$1" ]; then
+	echo "Usage: $0 <file>"
+	exit 1
+fi
+
+copy="$(mktemp -u /tmp/rummage.XXXXX)"
+cp "$file" "$copy"
+
+trap "rm -f '$copy'; exit 1" EXIT INT TERM HUP # cleanup
+watch diff --old-line-format='' --new-line-format='%L' --unchanged-line-format='' "$copy" "$file"
