@@ -1,11 +1,7 @@
 #!/bin/bash
 # Scrap Tumblr to get random images
 # Usage: feh --bg-fill --no-fehbg $(scrapthumb -run1) > /tmp/scrapthumb
-
-# TODO
-# - Handle network errors
-# - GIF support
-# - Transitions
+# TODO: handle network errors
 
 GETTER="wget -t1 -qO -"
 MAXIMGS=5
