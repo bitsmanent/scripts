@@ -152,6 +152,22 @@ droid
 -----
 Sane Android Development.
 
+```
+$ droid
+Usage: droid <cmd>
+
+Commands:
+   setup        : creates the development environment
+   install      : install the app into the device
+   upload       : upload the app into the device
+   build        : build the app (if no task, assumes assembleDebug)
+   upgrade      : build and install the app (assembleDebug)
+   deploy       : build and install the app (assembleRelease)
+   init         : create a new project into the current directory
+   clean        : remove all builds
+   help         : print this help
+```
+
 browse
 ------
 Little dmenu-based file browser which output the selected file (if any).
