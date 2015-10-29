@@ -19,23 +19,19 @@ _adb() {
 }
 
 do_setup() {
-	tmpd="$BASEDIR/tmp"
-	if [ ! -d "$tmpd" ]; then
-		mkdir -p "$tmpd"
+	echo "Setting up the development environment..."
+
+	cd "/tmp"
+	if [ ! -d "$BASEDIR/android-sdk-linux" ]; then
+		echo "Setting up the SDK..."
+		wget -O sdk.tgz -qc "$SDK_URL"
+		tar zxf sdk.tgz -C "$BASEDIR"
 	fi
-	cd "$tmpd"
-
-	echo "Downloading..."
-	wget -O sdk.tgz -qc "$SDK_URL"
-	wget -O gradle.zip -qc "$GRADLE_URL"
-
-	echo "Extracting..."
-	[ ! -d "$BASEDIR/android-sdk-linux" ] && tar zxf sdk.tgz -C "$BASEDIR"
-	[ ! -d "$BASEDIR/gradle-2.3" ] && unzip -qq gradle.zip -d "$BASEDIR"
-
-	echo "Cleaning up..."
-	rm -f "$tmpd"
-
+	if [ ! -d "$BASEDIR/gradle-2.3" ]; then
+		echo "Setting up the Gradle build system..."
+		wget -O gradle.zip -qc "$GRADLE_URL"
+		unzip -qq gradle.zip -d "$BASEDIR"
+	fi
 	cd "$OLDPWD"
 
 	# Need to install the SDK tools, build tools and system image
