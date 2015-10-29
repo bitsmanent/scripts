@@ -80,11 +80,6 @@ do_init() {
 	echo 'To be implemented.'
 }
 
-die() {
-	echo "$0: $@"
-	exit 1
-}
-
 usage() {
 	echo "Usage: $(basename "$0") <cmd>"
 
