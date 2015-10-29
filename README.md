@@ -85,7 +85,7 @@ A more complex example with GIFs support (CPU intensive):
 This approach requires convert(1) from the ImageMagick suite.
 
 You can achieve more extreme results by using scrapthumb in conjunction with
-semi-automatic customization tool. Have a look at
+semi-automatic customization tools. Have a look at
 [autotheme.sh](https://github.com/neeasade/autotheme.sh).
 
 acpi
