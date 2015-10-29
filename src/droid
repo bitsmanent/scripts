@@ -9,8 +9,7 @@ SDK_URL=http://dl.google.com/android/android-sdk_r24.1.2-linux.tgz
 GRADLE_URL=https://services.gradle.org/distributions/gradle-2.3-bin.zip
 
 # Remove the need to have sdk.dir in local.properties
-# XXX If local.properties exists, it should have higher priority
-export ANDROID_HOME="$SDKDIR"
+[ ! -f "local.properties" ] && export ANDROID_HOME="$SDKDIR"
 
 _adb() {
 	# XXX if adb is not running as root, it must be started first
