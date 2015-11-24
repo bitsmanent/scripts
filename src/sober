@@ -1,0 +1,46 @@
+#!/bin/sh
+# Simple sobriety checker inspired by DrunkGuard.
+
+NCHECKS=3
+DRUNKSFILE=/tmp/drunks
+
+die() {
+	echo "$@"
+	exit 1
+}
+
+rnd() {
+	nofd="$1" # n. of digits
+	cset="$2" # character set
+	[ -z "$nofd" ] && nofd=1
+	[ -z "$cset" ] && cset="[:digit:]"
+	dd if=/dev/urandom of=/dev/stdout bs=4096 count=1 2>/dev/null |tr -dc "$cset" |head -c "$nofd"
+}
+
+check() {
+	n1="$(rnd)"
+	n2="$(rnd)"
+	sum="$(echo "${n1}+${n2}" | bc)"
+	printf "How much is %d + %d? " "$n1" "$n2"
+	read r
+	if [ "$r" -ne "$sum" ]; then
+		return 1
+	fi
+	return 0
+}
+
+drunk() {
+	echo "$(date +'%d/%m/%Y %H:%M:%S') | $(id -un) | $@" >> "$DRUNKSFILE"
+	die "You're drunk, I'll take care of you."
+}
+
+main() {
+	[ "$#" -eq 0 ] && die "Are you sober?"
+	for i in $(seq 1 $NCHECKS); do
+		check
+		[ $? -ne 0 ] && drunk "$@"
+	done
+	$@
+}
+
+main "$@"

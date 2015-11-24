@@ -189,3 +189,26 @@ diffmon
 -------
 Simple script which monitor a file and show lines that are changed since you
 ran it.
+
+sober
+-----
+Simple sobriety checker inspired by [DrunkGuard](https://github.com/jkingsman/DrunkGuard).
+
+In a nutshell:
+```
+$ sudo rm -rf /
+How much is 7 + 1? 8
+How much is 5 + 9? 12
+You're drunk, I'll take care of you.
+```
+
+Use sober by creating aliases in your ~/.${SHELL}rc file:
+
+alias sudo="/path/of/sober sudo"
+alias rm="/path/of/sober rm"
+alias mv="/path/of/sober mv"
+alias apt-get="/path/of/sober apt-get"
+alias dpkg="/path/of/sober dpkg"
+
+You may want to toggle this aliases at specific times (e.g. after work hours).
+This is easily achievable with simple shell scripts.
