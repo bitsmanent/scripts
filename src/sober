@@ -23,9 +23,9 @@ check() {
 	sum="$(echo "${n1}+${n2}" | bc)"
 	printf "How much is %d + %d? " "$n1" "$n2"
 	read r
-	if [ "$r" -ne "$sum" ]; then
-		return 1
-	fi
+	nan="$(echo "$r" | grep -c '[^0-9]')"
+	[ "$nan" -eq 1 ] && return 1
+	[ "$r" -ne "$sum" ] && return 1
 	return 0
 }
 
