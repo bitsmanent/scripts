@@ -204,11 +204,13 @@ You're drunk, I'll take care of you.
 
 Use sober by creating aliases in your ~/.${SHELL}rc file:
 
+```
 alias sudo="/path/of/sober sudo"
 alias rm="/path/of/sober rm"
 alias mv="/path/of/sober mv"
 alias apt-get="/path/of/sober apt-get"
 alias dpkg="/path/of/sober dpkg"
+```
 
 You may want to toggle this aliases at specific times (e.g. after work hours).
 This is easily achievable with simple shell scripts.
