@@ -50,7 +50,7 @@ echo -n "Usage: $0 [-h] [-n <num>] [-s <source>] ...
 -s 	Source(s) (can be specified multiple times)
 -n	Number of items
 -u	Also output the source (fmt: source|url)
--h	Show this helps
+-h	Show this help
 "
 
 exit 1

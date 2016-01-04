@@ -47,7 +47,7 @@ echo -n "Usage: $0 [-hg] [-i <iface>] [-e <essid>] [-k <psk>] [-a <alias>]
 -e <essid>	ESSID of the network to connect
 -k <key>	Key of the network to connect
 -f <file>	Networks file
--h		Show this helps
+-h		Show this help
 "
 exit 1
 }
