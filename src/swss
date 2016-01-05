@@ -12,7 +12,7 @@ massact() {
 	act=$1
 	for s in ${services[@]}
 	do
-		service $s $1 &
+		service $s $act &
 	done
 }
 
