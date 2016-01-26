@@ -1,0 +1,74 @@
+#!/bin/sh
+# Copy $NAMES files and directory, clone the $GITREPOS it repositories, and put
+# everything into $BKPDIR (default CWD).
+#
+# Usage: ./mkbkp [config file]
+# Using sudo: sudo -Eu $(id -un) ./mkbkp [config file]
+
+# enabled supports
+SUPPORT="
+bkp_names
+bkp_gitrepos
+"
+
+OPWD="$(pwd)"
+NEWLINE='
+'
+
+bkp_names() {
+	setdir "names"
+	mexec "$NAMES" "cp -rf %s ."
+}
+
+bkp_gitrepos() {
+	setdir "gitrepos"
+	mexec "$GITREPOS" "git clone %s"
+}
+
+die() {
+	echo "$@"
+	exit 1
+}
+
+setdir() {
+	dir="$1"
+	[ "$dir" != "$BKPDIR" ] && cd "${OPWD}/${BKPDIR}"
+	if [ ! -d "$dir" ]; then
+		mkdir -p "$dir"
+		rv=$?
+		[ $rv -ne 0 ] && die "${dir}: cannot create directory"
+	fi
+	cd "$dir"
+}
+
+mexec() {
+	list="$1"
+	cmd="$2"
+	[ -z "$list" -o -z "$cmd" ] && return
+	for i in $list; do
+		c="$(printf "$cmd" "$i")"
+		c="${c} 2>&1 > /dev/null"
+		eval "$c" 2>&1 > /dev/null
+	done
+}
+
+main() {
+	cfg="$1"
+	[ -z "$cfg" ] && cfg=~/.mkbkprc
+	[ ! -e "$cfg" ] && die "${cfg}: file not found"
+	. "$cfg"
+
+	setdir "$BKPDIR"
+	echo -n "Backing up into ${BKPDIR}..."
+
+	IFS="$NEWLINE"
+	for s in $SUPPORT; do
+		$s
+	done
+	unset IFS
+
+	cd "$OPWD"
+	echo " done."
+}
+
+main "$@"

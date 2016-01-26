@@ -214,3 +214,32 @@ alias dpkg="/path/of/sober dpkg"
 
 You may want to toggle this aliases at specific times (e.g. after work hours).
 This is easily achievable with simple shell scripts.
+
+mkbkp
+-----
+Copy all tracked files and git repositories into a directory. The stuff to
+backup is taken from the file given as argument or ${HOME}/.mkbkprc if no
+argument is given.
+
+Sample configuration:
+```
+# default destination path if not given
+BKPDIR="backup-$(hostname -s)-$(date +'%Y%m%d')"
+
+# files and directories
+NAMES="
+${HOME}/myfiles
+${HOME}/mail
+${HOME}/.config/chromium/Default/Bookmarks
+"
+
+# git repositories
+GITREPOS="
+git@github.com:clamiax/scripts.git
+"
+```
+
+mkbkp only supports backup of files, directories and git repositories. Though
+it easy to add support for virtually anything. Just declare a function in your
+configuration file and add it into the $SUPPORT variable. See bkp_names and
+bkp_gitrepos in [mkbkp](mkbkp) to learn more.
