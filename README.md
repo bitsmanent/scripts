@@ -241,5 +241,5 @@ git@github.com:clamiax/scripts.git
 
 mkbkp only supports backup of files, directories and git repositories. Though
 it easy to add support for virtually anything. Just declare a function in your
-configuration file and add it into the $SUPPORT variable. See bkp_names and
-bkp_gitrepos in [mkbkp](mkbkp) to learn more.
+configuration file and add its name into the $SUPPORT variable. See bkp_names
+and bkp_gitrepos in [mkbkp](src/mkbkp) to learn more.
