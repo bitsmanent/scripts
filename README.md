@@ -2,6 +2,23 @@ scripts
 =======
 Useful shell scripts.
 
+index
+-----
+* [iwpick](#iwpick) [source](src/iwpick)
+* [scrapthumb](#scrapthumb) [source](src/scrapthumb)
+* [acpi](#acpi) [source](src/acpi)
+* [dwmstatus](#dwmstatus) [source](src/dwmstatus)
+* [spawncgi](#spawncgi) [source](src/spawncgi)
+* [pronunciask](#pronunciask) [source](src/pronunciask)
+* [pkgsetup](#pkgsetup) [source](src/pkgsetup)
+* [whexsafe](#whexsafe) [source](src/whexsafe)
+* [swss](#swss) [source](src/swss)
+* [droid](#droid) [source](src/droid)
+* [browse](#browse) [source](src/browse)
+* [diffmon](#diffmon) [source](src/diffmon)
+* [sober](#sober) [source](src/sober)
+* [mkbkp](#mkbkp) [source](src/mkbkp)
+
 iwpick
 ------
 Connects to a network. Authentication is not mandatory and only WPA2 is supported at the moment. It will works with no pain on any Linux system equipped with iwconfig, sdhcp and wpa_supplicant. Just run:
