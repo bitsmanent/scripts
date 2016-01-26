@@ -4,20 +4,20 @@ Useful shell scripts.
 
 index
 -----
-* [iwpick](#iwpick) [source](src/iwpick)
-* [scrapthumb](#scrapthumb) [source](src/scrapthumb)
-* [acpi](#acpi) [source](src/acpi)
-* [dwmstatus](#dwmstatus) [source](src/dwmstatus)
-* [spawncgi](#spawncgi) [source](src/spawncgi)
-* [pronunciask](#pronunciask) [source](src/pronunciask)
-* [pkgsetup](#pkgsetup) [source](src/pkgsetup)
-* [whexsafe](#whexsafe) [source](src/whexsafe)
-* [swss](#swss) [source](src/swss)
-* [droid](#droid) [source](src/droid)
-* [browse](#browse) [source](src/browse)
-* [diffmon](#diffmon) [source](src/diffmon)
-* [sober](#sober) [source](src/sober)
-* [mkbkp](#mkbkp) [source](src/mkbkp)
+* [iwpick](#iwpick) - Connects to a network.
+* [scrapthumb](#scrapthumb) - Get random images from Tumblr.
+* [acpi](#acpi) - Simple power management.
+* [dwmstatus](#dwmstatus) - Output useful informations suitable for a status bar.
+* [spawncgi](#spawncgi) - Spawn the CGI daemon.
+* [pronunciask](#pronunciask) - Get pronunciations from forvo.com.
+* [pkgsetup](#pkgsetup) - Easy pkgsrc (and -wip) for non-NetBSD systems
+* [whexsafe](#whexsafe) - Web safe color list in hex and RGB
+* [swss](#swss) - Start/stop a group of services
+* [droid](#droid) - Sane Android development
+* [browse](#browse) - Little dmenu-based file browser.
+* [diffmon](#diffmon) - Diff-based file monitor.
+* [sober](#sober) - Simple sobriety checker.
+* [mkbkp](#mkbkp) - Simple backups.
 
 iwpick
 ------
