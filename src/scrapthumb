@@ -46,10 +46,11 @@ preload() {
 }
 
 usage() {
-echo -n "Usage: $0 [-h] [-n <num>] [-s <source>] ...
+echo -n "Usage: $0 [-hr] [-n <num>] [-s <source>] ...
 -s 	Source(s) (can be specified multiple times)
 -n	Number of items
 -u	Also output the source (fmt: source|url)
+-r	Randomize sources
 -h	Show this help
 "
 
