@@ -1,0 +1,21 @@
+#!/bin/sh
+
+PULSE_SERVER="unix:/run/user/$(id -u)/pulse/native"
+
+main() {
+	dev="$(xrandr |awk '/ connected/ {print $1}' |sort |head -1)"
+
+	case $dev in
+	HDMI*) audio="hdmi";;
+	LVDS*) audio="analog";;
+	esac
+
+	sudo -u $(id -un) pactl --server $PULSE_SERVER \
+	     set-card-profile 0 \
+	     output:${audio}-stereo+input:analog-stereo
+	xrandr --output $dev --auto
+
+	echo "$dev w/ $audio audio."
+}
+
+main "$@"

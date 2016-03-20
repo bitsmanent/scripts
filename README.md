@@ -260,3 +260,9 @@ mkbkp only supports backup of files, directories and git repositories. Though
 it easy to add support for virtually anything. Just declare a function in your
 configuration file and add its name into the $SUPPORT variable. See bkp_names
 and bkp_gitrepos in [mkbkp](src/mkbkp) to learn more.
+
+setmon
+------
+Detects connected screens and set proper video and audio output. It uses xrandr
+and pulseaudio. I wrote it to easily switch forth and back from my HDMI TV.
+Change it to fit your needs.
