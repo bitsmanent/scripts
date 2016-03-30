@@ -3,9 +3,11 @@
 
 target="$1"
 [ -z "$target" ] && target="$(realpath .)"
+prompt="$2"
+[ -z "$prompt" ] && prompt="$target"
 
 while true; do
-	sel="$(ls -1a "$target" |grep -v '^\.$' | dmenu -p "$target" -l 25)"
+	sel="$(ls -1a "$target" |grep -v '^\.$' | dmenu -p "$prompt" -l 25)"
 	ec=$?
 	[ "$ec" -ne 0 ] && exit $ec
 
