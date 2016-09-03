@@ -18,6 +18,7 @@ index
 * [diffmon](#diffmon) - Diff-based file monitor.
 * [sober](#sober) - Simple sobriety checker.
 * [mkbkp](#mkbkp) - Simple backups.
+* [setmon](#setmon) - Switch to HDMI video/audio if any.
 
 iwpick
 ------
