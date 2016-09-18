@@ -6,14 +6,16 @@ BATTWARNING=12
 ACPLUGGED="$(cat $(du -a /sys/devices |grep 'AC0/online' |awk '{print $2}'))"
 LIDSTATE="$(cat /proc/acpi/button/lid/LID/state |awk '{print $2}')"
 
+export DISPLAY=:0
+export XAUTHORITY=~/.Xauthority
+
 warning() {
 	pct="$1"
 	L=" OK "
 
-	xmessage -display :0 -center -buttons "$L" -default "$L" "WARNING: battery level is ${pct}%" &
+	xmessage -center -buttons "$L" -default "$L" "WARNING: battery level is ${pct}%" &
 
-	for i in $(seq 3)
-	do
+	for i in $(seq 3); do
 		play -qn synth 00:00.1 sine 500
 	done
 }
