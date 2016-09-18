@@ -19,6 +19,7 @@ index
 * [sober](#sober) - Simple sobriety checker.
 * [mkbkp](#mkbkp) - Simple backups.
 * [setmon](#setmon) - Switch to HDMI video/audio if any.
+* [moin](#moin) - Play a random song from a YouTube playlist
 
 iwpick
 ------
@@ -267,3 +268,13 @@ setmon
 Detects connected screens and set proper video and audio output. It uses xrandr
 and pulseaudio. I wrote it to easily switch forth and back from my HDMI TV.
 Change it to fit your needs.
+
+moin
+----
+Play a random song from a YouTube playlist. The playlist is specified by its
+ID, if none is give $DEFLIST is used. Default player is mpv, refine the $PLAYER
+and $PLAYER_OPTS variable to fit your needs. You may want to wake up in the
+morning like this:
+
+# Plays from monday to friday at 08:00am
+0 8 * * 1-5 /path/of/moin
