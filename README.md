@@ -10,16 +10,16 @@ index
 * [dwmstatus](#dwmstatus) - Output useful informations suitable for a status bar.
 * [spawncgi](#spawncgi) - Spawn the CGI daemon.
 * [pronunciask](#pronunciask) - Get pronunciations from forvo.com.
-* [pkgsetup](#pkgsetup) - Easy pkgsrc (and -wip) for non-NetBSD systems
-* [whexsafe](#whexsafe) - Web safe color list in hex and RGB
-* [swss](#swss) - Start/stop a group of services
-* [droid](#droid) - Sane Android development
+* [pkgsetup](#pkgsetup) - Easy pkgsrc (and -wip) for non-NetBSD systems.
+* [whexsafe](#whexsafe) - Web safe color list in hex and RGB.
+* [swss](#swss) - Start/stop a group of services.
+* [droid](#droid) - Sane Android development.
 * [browse](#browse) - Little dmenu-based file browser.
 * [diffmon](#diffmon) - Diff-based file monitor.
 * [sober](#sober) - Simple sobriety checker.
 * [mkbkp](#mkbkp) - Simple backups.
 * [setmon](#setmon) - Switch to HDMI video/audio if any.
-* [moin](#moin) - Play a random song from a YouTube playlist
+* [moin](#moin) - Play a random song from a YouTube playlist.
 
 iwpick
 ------
@@ -272,16 +272,16 @@ Change it to fit your needs.
 moin
 ----
 Play a random song from a YouTube playlist. The playlist is specified by its
-ID, if none is given $DEFLIST is used. Default player is mpv, refine the $PLAYER
-and $PLAYER_OPTS variable to fit your needs. You may want to wake up in the
-morning but putting the following in your crontab:
+ID, if none is given $DEFLIST is used. Default player is mpv, refine the
+$PLAYER and $PLAYER_OPTS variables to fit your needs. You may want to wake up
+in the morning by putting the following in your crontab:
 
 ```
 # Plays from monday to friday at 08:00am
 0 8 * * 1-5 /path/of/moin
 ```
 
-Where to take the playlist ID? It's specified in the "list" parameter of the
+Where to take the playlist ID? It's specified by the "list" parameter of the
 URL. For example, if the URL of your playlist is the following:
 
 ```
