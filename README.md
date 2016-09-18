@@ -274,7 +274,9 @@ moin
 Play a random song from a YouTube playlist. The playlist is specified by its
 ID, if none is give $DEFLIST is used. Default player is mpv, refine the $PLAYER
 and $PLAYER_OPTS variable to fit your needs. You may want to wake up in the
-morning like this:
+morning but putting the following in your crontab:
 
+```
 # Plays from monday to friday at 08:00am
 0 8 * * 1-5 /path/of/moin
+```
