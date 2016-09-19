@@ -271,18 +271,20 @@ Change it to fit your needs.
 
 moin
 ----
-Play a random song from a YouTube playlist. The playlist is specified by its
-ID, if none is given $DEFLIST is used. Default player is mpv, refine the
-$PLAYER and $PLAYER_OPTS variables to fit your needs. You may want to wake up
-in the morning by putting the following in your crontab:
+The [moin](src/moin) script takes a random song from the specified YouTube
+playlist and play it. The default player is mpv but you can refine the $PLAYER
+and $PLAYER_OPTS variables to fit your needs. You may want to wake up in the
+morning by putting the following in your crontab:
 
 ```
 # Plays from monday to friday at 08:00am
-0 8 * * 1-5 /path/of/moin
+0 8 * * 1-5 /path/of/moin <YOUR-API-KEY> <PLAYLIST-ID>
 ```
 
-Where to take the playlist ID? It's specified by the "list" parameter of the
-URL. For example, if the URL of your playlist is the following:
+Both the API key and the playlist ID are required. If you don't have a key then
+[make one here](https://console.developers.google.com/apis/credentials).
+The playlist ID is specified by the "list" parameter of the URL. For example,
+if the URL of your playlist is the following:
 
 ```
 https://www.youtube.com/watch?v=xvIuuKVwY_8&list=RDEMWmz07MSPRGna5rHl5FWPRw&index=40

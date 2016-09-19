@@ -1,22 +1,22 @@
 #!/bin/sh
 
-APIKEY="AIzaSyA5626nAOZTrgWtobeTGrFe0vFoEo9VBZg"
 APIURI="https://www.googleapis.com/youtube/v3"
 VIDURI="https://youtube.com/embed"
-DEFLIST="RDEMWmz07MSPRGna5rHl5FWPRw"
 PLAYER="mpv"
 PLAYER_OPTS="-vo null --quiet"
 
 ytapi() {
-	cmd="$1"
-	params="$2"
-	wget -qO - "$APIURI/$cmd?key=$APIKEY&part=contentDetails&$params"
+	apikey="$1"
+	cmd="$2"
+	params="$3"
+	wget -qO - "$APIURI/$cmd?key=$apikey&part=contentDetails&$params"
 }
 
 ytplrand() {
-	listid="$1"
+	apikey="$1"
+	listid="$2"
 	maxres=50
-	data="$(ytapi "playlists" "id=$listid")"
+	data="$(ytapi "$apikey" "playlists" "id=$listid")"
 	nitems="$(echo "$data" |grep itemCount |cut -d: -f2)"
 	choose="$(shuf -i 1-"$nitems" -n1)"
 	page="$(echo "1 + ($choose - 1) / $maxres" |bc)"
@@ -26,19 +26,24 @@ ytplrand() {
 	# browse the pages until reach the item (that's the way YouTube works)
 	for p in $(seq $page); do
 		[ $p -gt 1 ] && pagetok="&pageToken=$(echo $data|grep nextPageToken |cut -d: -f2)"
-		data="$(ytapi "playlistItems" "playlistId=$listid&maxResults=${maxres}${pagetok}")"
+		data="$(ytapi "$apikey" "playlistItems" "playlistId=$listid&maxResults=${maxres}${pagetok}")"
 	done
 	echo "$(echo "$data" |grep videoId |head -n $item |tail -1 |cut -d: -f2 |tr -cd "[:alnum:]_-")"
 }
 
 main() {
-	listid="$1"
-	[ -z "$listid" ] && listid="$DEFLIST"
+	apikey="$1"
+	listid="$2"
+
+	if [ -z "$apikey" -o -z "$listid" ]; then
+		echo "Usage: "$(basename "$0")" <API key> <playlist ID>"
+		exit 1
+	fi
 
 	pgrep -a "$PLAYER" >/dev/null && exit 1
 	rv=1
 	while [ $rv -ne 0 ]; do
-		songid="$(ytplrand "$listid")"
+		songid="$(ytplrand "$apikey" "$listid")"
 		"$PLAYER" $PLAYER_OPTS "$VIDURI/$songid"
 		#rv=$?
 		rv=0
