@@ -112,7 +112,7 @@ acpi
 Notice the user if the battery charge is below 12% or suspend (in memory) the
 system if the battery is below 9%. Make it runs each minute via cron like this:
 ```
-* * * * * /path/of/acpi
+* * * * * sudo -i /path/of/acpi
 ```
 
 dwmstatus
