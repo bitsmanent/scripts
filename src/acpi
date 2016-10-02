@@ -16,7 +16,7 @@ warning() {
 	xmessage -center -buttons "$L" -default "$L" "WARNING: battery level is ${pct}%" &
 
 	for i in $(seq 3); do
-		play -qn synth 00:00.1 sine 500
+		play -qn synth 00:00.05 sine $(echo "800 + (30 * $i)" |bc)
 	done
 }
 
