@@ -115,6 +115,8 @@ system if the battery is below 9%. Make it runs each minute via cron like this:
 * * * * * sudo -i /path/of/acpi
 ```
 
+It uses xmessage(1) and play(1) to alert the user.
+
 dwmstatus
 ---------
 Output useful informations suitable for a status bar. It's designed for dwm.
