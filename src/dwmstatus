@@ -49,12 +49,19 @@ gettemp() {
 	echo "${r}C"
 }
 
-getvol() {
-	fds=$(amixer get Master |tail -1  |sed 's/.*\[\([^ ]*\)\] \[\([^ ]*\)\] \[\([^ ]*\)\].*/\1|\2|\3/')
-	pct=$(echo $fds |cut -d'|' -f1)
-	dcbl=$(echo $fds |cut -d'|' -f2)
-	mute=$(echo $fds |cut -d'|' -f3)
-	[ "$mute" = "on" ] && echo $pct || echo "${pct}*"
+getalsavol() {
+	fds="$(amixer get Master |tail -1  |sed 's/.*\[\([^ ]*\)\] \[\([^ ]*\)\] \[\([^ ]*\)\].*/\1|\2|\3/')"
+	pct="$(echo $fds |cut -d'|' -f1)"
+	#dcbl="$(echo $fds |cut -d'|' -f2)"
+	mute="$(echo $fds |cut -d'|' -f3)"
+	[ "$mute" = "on" ] && echo "$pct" || echo "${pct}*"
+}
+
+getpulsevol() {
+	fds="$(pactl list sinks |grep -A9 "Sink #8")"
+	pct="$(echo "$fds" |tail -1 |cut -d'/' -f2 |tr -d ' ')"
+	mute="$(echo "$fds" |tail -2 |head -1 |cut -d: -f2 |tr -d ' ')"
+	[ "$mute" = "no" ] && echo "$pct" || echo "${pct}*"
 }
 
 main() {
@@ -63,7 +70,8 @@ main() {
 	date=$(getdate)
 	freqs=$(getfreqs)
 	temp=$(gettemp)
-	vol=$(getvol)
+	#vol="$(getalsavol)"
+	vol="$(getpulsevol)"
 	printf "B:%s T:%s W:%s V:%-4s (%s) %s" "$battery" "$temp" "$iwlink" "$vol" "$freqs" "$date"
 }
 
