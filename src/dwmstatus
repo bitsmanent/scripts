@@ -58,7 +58,7 @@ getalsavol() {
 }
 
 getpulsevol() {
-	fds="$(pactl list sinks |grep -A9 "Sink #8")"
+	fds="$(pactl list sinks |grep -m1 -A9 "^Sink")"
 	pct="$(echo "$fds" |tail -1 |cut -d'/' -f2 |tr -d ' ')"
 	mute="$(echo "$fds" |tail -2 |head -1 |cut -d: -f2 |tr -d ' ')"
 	[ "$mute" = "no" ] && echo "$pct" || echo "${pct}*"
