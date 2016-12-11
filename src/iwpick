@@ -22,11 +22,9 @@ connect() {
 		rm $tmp
 	fi
 
-	# sdhcp wait forever if $iface have no IP address. Workaround this.
-	t=$(ifconfig $iface |grep inet: |cut -d: -f2 |cut -d' ' -f1)
-	[ -z $t ] && ifconfig $iface 192.168.0.2
-
-	sdhcp -d $iface >/dev/null
+	sdhcp -d $iface >/dev/null &
+	addr="$(tcpdump -vlni $iface -c 1 -Q in udp 2>&1 |grep "Your-IP" |tr -d [:space:] |cut -b8-)"
+	ifconfig $iface $addr
 }
 
 die() {
