@@ -14,7 +14,7 @@ index
 * [whexsafe](#whexsafe) - Web safe color list in hex and RGB.
 * [swss](#swss) - Start/stop a group of services.
 * [droid](#droid) - Sane Android development.
-* [browse](#browse) - Little dmenu-based file browser.
+* [dbrowse](#dbrowse) - Little dmenu-based file browser.
 * [diffmon](#diffmon) - Diff-based file monitor.
 * [sober](#sober) - Simple sobriety checker.
 * [mkbkp](#mkbkp) - Simple backups.
@@ -189,21 +189,21 @@ Commands:
    help         : print this help
 ```
 
-browse
+dbrowse
 ------
 Little dmenu-based file browser which output the selected file (if any).
 
 Sample usage:
 
 ```
-$ mimeopen "$(/path/of/browse)"
+$ mimeopen "$(/path/of/dbrowse)"
 ```
 
 For [dwm](http://dwm.suckless.org) users, it may come in handy a key binding
 like this:
 
 ```
-{ MODKEY|ShiftMask,		XK_o,      spawn,          SHCMD("mimeopen -n \"$(/path/of/browse)\"") },
+{ MODKEY|ShiftMask,		XK_o,      spawn,          SHCMD("mimeopen -n \"$(/path/of/dbrowse)\"") },
 ```
 
 diffmon
