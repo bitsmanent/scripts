@@ -12,7 +12,7 @@ connect() {
 
 	echo "Connecting to ${essid}..."
 
-	ifconfig $iface up
+	ifconfig $iface up 0
 	iwconfig $iface essid $essid
 
 	if [ -n "$key" ]; then
@@ -23,8 +23,13 @@ connect() {
 	fi
 
 	sdhcp -d $iface >/dev/null &
-	addr="$(tcpdump -vlni $iface -c 1 -Q in udp 2>&1 |grep "Your-IP" |tr -d [:space:] |cut -b8-)"
+	pkt="$(tcpdump -vlni $iface -c 1 -Q in udp 2>&1)"
+	addr="$(echo "$pkt" |grep "Your-IP" |tr -d [:space:] |cut -b8-)"
+	dgw="$(echo "$pkt" |grep "Gateway-IP" |tr -d [:space:] |cut -b11-)"
+	egw="$(echo "$pkt" |grep "Default-Gateway" |tr -d [:space:] |cut -d: -f2)"
+	[ -n "$dgw" ] && gw="$dgw" || gw="$egw"
 	ifconfig $iface $addr
+	route add default gw $gw
 }
 
 die() {
