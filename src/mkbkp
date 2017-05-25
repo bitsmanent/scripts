@@ -8,6 +8,7 @@
 # enabled supports
 SUPPORT="
 bkp_names
+bkp_sunames
 bkp_gitrepos
 "
 
@@ -18,6 +19,11 @@ NEWLINE='
 bkp_names() {
 	setdir "names"
 	mexec "$NAMES" "cp -rf %s ."
+}
+
+bkp_sunames() {
+	setdir "sunames"
+	mexec "$SUNAMES" "sudo cp -rf %s ."
 }
 
 bkp_gitrepos() {
