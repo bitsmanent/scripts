@@ -23,7 +23,6 @@ connect() {
 	fi
 
 	sdhcp -d $iface >/dev/null &
-
 	while [ -z "$gw" ]; do
 		pkt="$(tcpdump -vlni $iface -c 1 -Q in udp 2>&1)"
 		addr="$(echo "$pkt" |grep "Your-IP" |tr -d [:space:] |cut -b8-)"

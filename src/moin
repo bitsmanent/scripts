@@ -18,6 +18,7 @@ ytplrand() {
 	maxres=50
 	data="$(ytapi "$apikey" "playlists" "id=$listid")"
 	nitems="$(echo "$data" |grep itemCount |cut -d: -f2)"
+	[ -z "$nitems" ] && return
 	choose="$(shuf -i 1-"$nitems" -n1)"
 	page="$(echo "1 + ($choose - 1) / $maxres" |bc)"
 	item="$(echo "$choose - (($page-1) * $maxres)" |bc)"
@@ -39,11 +40,11 @@ main() {
 		echo "Usage: "$(basename "$0")" <API key> <playlist ID>"
 		exit 1
 	fi
-
 	pgrep -a "$PLAYER" >/dev/null && exit 1
 	rv=1
 	while [ $rv -ne 0 ]; do
 		songid="$(ytplrand "$apikey" "$listid")"
+		[ -z "$songid" ] && echo "$(basename "$0"): no song ID found" && break
 		"$PLAYER" $PLAYER_OPTS "$VIDURI/$songid"
 		#rv=$?
 		rv=0
