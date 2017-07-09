@@ -67,41 +67,10 @@ Some sample usages in ~/.xinitrc:
 		sleep 5m
 	done &
 
-A more complex example with GIFs support (CPU intensive):
-
-	# Change wallpaper each 5 minutes by storing the source into
-	# /tmp/.scrapthumb (new with the -u flag). If the image is a GIF, then
-	# it's split into frames which are then progressively set as
-	# background, with 1ms of delay.
-	while : ; do
-		intval=300
-		scrap="$(scrapthumb -urn1)"
-		uri="$(echo "$scrap" |cut -d'|' -f2)"
-		ext="$(echo "$uri" |rev |cut -d. -f1 |rev)"
-		if [ "$ext" = "gif" ]; then
-			d="$(mktemp -u /tmp/xinitrc.XXXXX)"
-			mkdir -p "$d"
-			convert "$uri" "$d/t.jpg"
-			ts="$(date +'%s')"
-			t=0
-			while [ "$t" -lt "$intval" ]; do
-				for jpg in "$d/"*.jpg; do
-					feh --bg-fill --no-fehbg "$jpg"
-					sleep 0.01
-					t="$(echo "$ts - $(date +'%s')" |bc)"
-					# never exceed $intval
-					[ "$t" -ge "$intval" ] && break
-				done
-			done
-			rm -rf "$d"
-		else
-			feh --bg-fill --no-fehbg "$uri"
-		fi
-		echo "$scrap" > /tmp/scrapthumb
-		sleep "$intval"
-	done &
-
-This approach requires convert(1) from the ImageMagick suite.
+If the image is in GIF format then the first frame is used (i.e. no playing at
+all). You can solve this by splitting frames up with convert(1) and set each of
+them as background with an interval of ~0.01 seconds. A better approach would
+be to use mpv with the --wid=0 parameter which is less CPU intensive.
 
 You can achieve more extreme results by using scrapthumb in conjunction with
 semi-automatic customization tools. Have a look at
