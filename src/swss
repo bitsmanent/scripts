@@ -2,10 +2,11 @@
 # simple web stack switch
 
 services=(
-	redis-server
-	mysql
-	nginx
-	php5-fpm
+redis-server
+mysql
+nginx
+#php5-fpm
+php7.0-fpm
 )
 
 massact() {
