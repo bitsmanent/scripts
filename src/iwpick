@@ -2,9 +2,6 @@
 # Connects to a network
 # Requires: wpa_supplicant, sdhcp, iwconfig
 
-NS1=208.67.222.222
-NS2=208.67.220.220
-
 connect() {
 	iface=$1
 	essid=$2
@@ -91,11 +88,6 @@ main() {
 	done
 
 	connect "$iface" "$essid" "$key"
-
-	# If no DNS are set, then use our own
-	f=/etc/resolv.conf
-	t=$(grep ^[^#] $f |wc -l)
-	[ $t -eq 0 ] && printf "nameserver %s\nnameserver %s\n" $NS1 $NS2 >> $f
 }
 
 main "$@"
