@@ -1,24 +1,22 @@
 #!/bin/bash
 # Connects to a network
-# Requires: wpa_supplicant, sdhcp, iwconfig
+# Requires: wpa_supplicant, sdhcp, iwconfig suite
+
+NETWORKS_FILE=~/.networks
 
 connect() {
 	iface=$1
 	essid=$2
 	key=$3
 
-	echo "Connecting to ${essid}..."
-
 	ifconfig $iface up 0
 	iwconfig $iface essid $essid
-
 	if [ -n "$key" ]; then
 		tmp=$(mktemp)
 		echo -n "$key" | wpa_passphrase "$essid" >> $tmp
 		wpa_supplicant -i $iface -c "$tmp" -B 2>&1 > /dev/null
 		rm $tmp
 	fi
-
 	sdhcp -d $iface >/dev/null &
 	while [ -z "$gw" ]; do
 		pkt="$(tcpdump -vlni $iface -c 1 -Q in udp 2>&1)"
@@ -36,6 +34,21 @@ die() {
 	exit 1
 }
 
+pickone() {
+	ids=$(iwlist wlan0 scan |grep ESSID |cut -d'"' -f2)
+	nets=$(cat "$NETWORKS_FILE")
+
+	for net in $nets; do
+		essid="$(echo "$net" |cut -d: -f2)"
+		for id in $ids; do
+			if [ "$id" = "$essid" ]; then
+				echo "$essid"
+				return
+			fi
+		done
+	done
+}
+
 usage() {
 echo -n "Usage: $0 [-hg] [-i <iface>] [-e <essid>] [-k <psk>] [-a <alias>]
 -i <iface>	Network interface
@@ -43,6 +56,7 @@ echo -n "Usage: $0 [-hg] [-i <iface>] [-e <essid>] [-k <psk>] [-a <alias>]
 -e <essid>	ESSID of the network to connect
 -k <key>	Key of the network to connect
 -f <file>	Networks file
+-p 		Connect to a known network
 -h		Show this help
 "
 exit 1
@@ -50,43 +64,50 @@ exit 1
 
 main() {
 	iface=wlan0
-	file=~/.networks
+	file="$NETWORKS_FILE"
 	alias=
 	essid=
 	key=
+	pick=0
 
-	while getopts "ina:e:k:f:h" o; do
+	while getopts "inpa:e:k:f:h" o; do
 		case $o in
 			i) iface=$OPTARG;;
 			a) alias=$OPTARG;;
 			e) essid=$OPTARG;;
 			k) key=$OPTARG;;
 			f) file=$OPTARG;;
+			p) pick=1;;
 			h) usage;;
 		esac
 	done
 
 	[ "$(id -u)" -ne 0 ] && die "You must be root"
+	if [ $pick -eq 1 ]; then
+		echo "Looking for a suitable network... "
+		essid=$(pickone)
+		[ -z "$essid" ] && die "no network found."
+	fi
 	[ -z "$alias" -a -z "$essid" ] && usage
-
 	if [ -n "$alias" ]; then
 		s="$(sed -n /^${alias}:/p $file |cut -d: -f2-3)"
 		essid="$(echo $s |cut -d: -f1)"
+		[ -z "$essid" ] && die "alias '${alias}' not found"
 		key="$(echo $s |cut -sd: -f2)"
 	else
-		# If explicitly specified, check if the ESSID do exists
-		valid="$(iwlist $iface scan |grep ESSID |grep -wc $essid)"
-		[ $valid -eq 0 ] && die "essid '$essid' is not valid"
+		# Check the networks file to get a key
+		key="$(sed -n /:${essid}:/p $file |cut -d: -f3)"
 	fi
 
-	[ -z "$essid" ] && die "alias '${alias}' not found"
-
+	echo "Connecting to ${essid}..."
+	# If explicitly specified, check if the ESSID do exists
+	valid="$(iwlist $iface scan |grep ESSID |grep -wc $essid)"
+	[ $valid -eq 0 ] && die "$essid: no network found"
 	apps=(wpa_supplicant sdhcp)
 	for a in ${apps[@]}
 	do
 		pkill -f "$a"
 	done
-
 	connect "$iface" "$essid" "$key"
 }
 
