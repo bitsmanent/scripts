@@ -9,7 +9,6 @@ connect() {
 	essid=$2
 	key=$3
 
-	ifconfig $iface up 0
 	iwconfig $iface essid $essid
 	if [ -n "$key" ]; then
 		tmp=$(mktemp)
@@ -35,8 +34,10 @@ die() {
 }
 
 pickone() {
-	ids=$(iwlist wlan0 scan |grep ESSID |cut -d'"' -f2)
-	nets=$(cat "$NETWORKS_FILE")
+	iface="$1"
+	file="$2"
+	ids=$(iwlist "$iface" scan |grep ESSID |cut -d'"' -f2)
+	nets=$(cat "$file")
 
 	for net in $nets; do
 		essid="$(echo "$net" |cut -d: -f2)"
@@ -83,9 +84,10 @@ main() {
 	done
 
 	[ "$(id -u)" -ne 0 ] && die "You must be root"
+	ifconfig $iface up
 	if [ $pick -eq 1 ]; then
 		echo "Looking for a suitable network... "
-		essid=$(pickone)
+		essid="$(pickone "$iface" "$file")"
 		[ -z "$essid" ] && die "no network found."
 	fi
 	[ -z "$alias" -a -z "$essid" ] && usage
