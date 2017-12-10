@@ -13,7 +13,11 @@ DEF_SOURCES=(
 	"http://tumblr.com"
 	"http://desktopwallpaperproject.tumblr.com"
 	"http://wallpapermag.tumblr.com"
-	"http://hdwallpaper.1nation.eu"
+	"https://dsgwallpaper.tumblr.com"
+	"http://parallax-wallpapers.com"
+	"http://aerialwallpapers.tumblr.com"
+	"http://dressupyourtech.tumblr.com"
+	"http://allfullhdwallpapers.tumblr.com"
 )
 
 ##
