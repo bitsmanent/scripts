@@ -9,7 +9,7 @@ connect() {
 	essid=$2
 	key=$3
 
-	iwconfig $iface essid $essid
+	iwconfig $iface essid "$essid"
 	if [ -n "$key" ]; then
 		tmp=$(mktemp)
 		echo -n "$key" | wpa_passphrase "$essid" >> $tmp
@@ -103,7 +103,7 @@ main() {
 
 	echo "Connecting to ${essid}..."
 	# If explicitly specified, check if the ESSID do exists
-	valid="$(iwlist $iface scan |grep ESSID |grep -wc $essid)"
+	valid="$(iwlist $iface scan |grep ESSID |grep -wc "$essid")"
 	[ $valid -eq 0 ] && die "$essid: no network found"
 	apps=(wpa_supplicant sdhcp)
 	for a in ${apps[@]}
