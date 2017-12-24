@@ -71,7 +71,7 @@ do_upgrade() {
 }
 
 do_clean() {
-	rm -rf build
+	rm -rf build .gradle
 }
 
 do_deploy() {
