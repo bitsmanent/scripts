@@ -12,7 +12,11 @@ GRADLE_URL=https://services.gradle.org/distributions/gradle-2.3-bin.zip
 [ ! -f "local.properties" ] && export ANDROID_HOME="$SDKDIR"
 
 _adb() {
-	# XXX if adb is not running as root, it must be started first
+	pids="$(pgrep -f adb)"
+	if [ ${#pids} -eq 0 ]; then
+		echo "You need to start ADB first. Run $ADB start-server as root."
+		exit 1
+	fi
 	apk="./build/outputs/apk/$(basename $(pwd))-debug.apk"
 	$ADB "$@" "$apk"
 }
