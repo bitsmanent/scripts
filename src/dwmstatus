@@ -5,9 +5,12 @@ getbattery() {
 	efull=$(cat /sys/class/power_supply/BAT0/energy_full)
 	vnow=$(cat /sys/class/power_supply/BAT0/voltage_now)
 
-	r=$(echo "($enow * 100 / $vnow) * 100 / ($efull * 100 / $vnow)" |bc)
+	if [ $enow -eq 0 -o $vnow -eq 0 ]; then
+		r=?
+	else
+		r=$(echo "($enow * 100 / $vnow) * 100 / ($efull * 100 / $vnow)" |bc)
+	fi
 	acplugged="$(cat $(du -a /sys/devices |grep 'AC0/online' |awk '{print $2}'))"
-
 	r="${r}%"
 	[ $acplugged -eq 1 ] && r="${r}+" || r="${r}-"
 	echo "$r"
