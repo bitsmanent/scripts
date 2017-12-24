@@ -1,16 +1,14 @@
 #!/bin/bash
 
 getbattery() {
-	enow=$(cat /sys/class/power_supply/BAT0/energy_now)
-	efull=$(cat /sys/class/power_supply/BAT0/energy_full)
-	vnow=$(cat /sys/class/power_supply/BAT0/voltage_now)
+	batpath=/sys/class/power_supply/BAT0/
+	for kv in $(cat $batpath/uevent); do export $kv ; done
+	enow=$POWER_SUPPLY_ENERGY_NOW
+	efull=$POWER_SUPPLY_ENERGY_FULL
+	vnow=$POWER_SUPPLY_VOLTAGE_NOW
+	acplugged=$POWER_SUPPLY_PRESENT
 
-	if [ $enow -eq 0 -o $vnow -eq 0 ]; then
-		r=?
-	else
-		r=$(echo "($enow * 100 / $vnow) * 100 / ($efull * 100 / $vnow)" |bc)
-	fi
-	acplugged="$(cat $(du -a /sys/devices |grep 'AC0/online' |awk '{print $2}'))"
+	r=$(echo "($enow * 100 / $vnow) * 100 / ($efull * 100 / $vnow)" |bc)
 	r="${r}%"
 	[ $acplugged -eq 1 ] && r="${r}+" || r="${r}-"
 	echo "$r"
