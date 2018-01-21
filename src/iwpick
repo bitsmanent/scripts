@@ -1,6 +1,6 @@
 #!/bin/bash
 # Connects to a network
-# Requires: wpa_supplicant, sdhcp, iwconfig suite
+# Requires: wpa_supplicant, dhclient and the iwconfig suite
 
 NETWORKS_FILE=~/.networks
 
@@ -16,7 +16,7 @@ connect() {
 		wpa_supplicant -i $iface -c "$tmp" -B 2>&1 > /dev/null
 		rm $tmp
 	fi
-	sdhcp -d $iface >/dev/null &
+	dhclient $iface >/dev/null &
 	while [ -z "$gw" ]; do
 		pkt="$(tcpdump -vlni $iface -c 1 -Q in udp 2>&1)"
 		addr="$(echo "$pkt" |grep "Your-IP" |tr -d [:space:] |cut -b8-)"
@@ -84,7 +84,7 @@ main() {
 	done
 
 	[ "$(id -u)" -ne 0 ] && die "You must be root"
-	ifconfig $iface up
+	ifconfig $iface up 0.0.0.0
 	if [ $pick -eq 1 ]; then
 		echo "Looking for a suitable network... "
 		essid="$(pickone "$iface" "$file")"
@@ -105,7 +105,7 @@ main() {
 	# If explicitly specified, check if the ESSID do exists
 	valid="$(iwlist $iface scan |grep ESSID |grep -wc "$essid")"
 	[ $valid -eq 0 ] && die "$essid: no network found"
-	apps=(wpa_supplicant sdhcp)
+	apps=(wpa_supplicant dhclient)
 	for a in ${apps[@]}
 	do
 		pkill -f "$a"

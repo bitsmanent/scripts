@@ -12,10 +12,9 @@ GRADLE_URL=https://services.gradle.org/distributions/gradle-2.3-bin.zip
 [ ! -f "local.properties" ] && export ANDROID_HOME="$SDKDIR"
 
 _adb() {
-	pids="$(pgrep -f adb)"
+	pids="$(pgrep -f ^adb)"
 	if [ ${#pids} -eq 0 ]; then
-		echo "You need to start ADB first. Run $ADB start-server as root."
-		exit 1
+		echo "WARNING: ADB server is not running, start it with: sudo droid adb start-server."
 	fi
 	apk="./build/outputs/apk/$(basename $(pwd))-debug.apk"
 	$ADB "$@" "$apk"
@@ -80,12 +79,16 @@ do_deploy() {
 }
 
 do_init() {
+	# droid-init/src/main/java/org/learn/Main.java
+	# droid-init/src/main/res/layout/hello_layout.xml
+	# droid-init/src/main/res/values/strings.xml
+	# droid-init/src/main/AndroidManifest.xml
+	# droid-init/build.gradle
 	echo 'To be implemented.'
 }
 
 usage() {
 	echo "Usage: $(basename "$0") <cmd>"
-
 	echo "
 Commands:
    setup\t: creates the development environment
@@ -98,13 +101,12 @@ Commands:
    clean\t: removes the builds from the current directory
    help\t\t: print this help
 	"
-
 	exit 1
 }
 
 main() {
-	cmd=$1
-	case $cmd in
+	case $1 in
+		adb) shift; _adb $@;;
 		setup) do_setup;;
 		install) do_install;;
 		uninstall) do_uninstall;;
