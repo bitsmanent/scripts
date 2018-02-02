@@ -78,15 +78,6 @@ do_deploy() {
 	do_install
 }
 
-do_init() {
-	# droid-init/src/main/java/org/learn/Main.java
-	# droid-init/src/main/res/layout/hello_layout.xml
-	# droid-init/src/main/res/values/strings.xml
-	# droid-init/src/main/AndroidManifest.xml
-	# droid-init/build.gradle
-	echo 'To be implemented.'
-}
-
 usage() {
 	echo "Usage: $(basename "$0") <cmd>"
 	echo "
@@ -97,7 +88,6 @@ Commands:
    build\t: build the app (if no task, assumes assembleDebug) 
    upgrade\t: build and install the app (assembleDebug)
    deploy\t: build and install the app (assembleRelease)
-   init\t\t: create a new project into the current directory
    clean\t: removes the builds from the current directory
    help\t\t: print this help
 	"
@@ -114,7 +104,6 @@ main() {
 		build) do_build $2;;
 		upgrade) do_upgrade;;
 		deploy) do_deploy;;
-		init) do_init;;
 		clean) do_clean;;
 		help) usage;;
 		*) usage;;
