@@ -82,8 +82,10 @@ usage() {
 	echo "Usage: $(basename "$0") <cmd>"
 	echo "
 Commands:
+   adb\t\t: adb pass-through (run ADB commands)
    setup\t: creates the development environment
    install\t: install the app into the device
+   uninstall\t: uninstall the app from the device (broken)
    upload\t: upload the app into the device
    build\t: build the app (if no task, assumes assembleDebug) 
    upgrade\t: build and install the app (assembleDebug)
