@@ -1,0 +1,51 @@
+#!/bin/bash
+# Fetch a random pic from a random blog (of a given list).
+
+BASEURI="https://api.tumblr.com/v2/blog/"
+GETTER="wget -t1 -qO -"
+
+SOURCES=(
+	"desktopwallpaperproject.tumblr.com"
+	"wallpapermag.tumblr.com"
+	"dsgwallpaper.tumblr.com"
+	"parallax-wallpapers.com"
+	"aerialwallpapers.tumblr.com"
+	"dressupyourtech.tumblr.com"
+	"allfullhdwallpapers.tumblr.com"
+)
+
+die() {
+	echo "$@"
+	exit 1
+}
+
+info() {
+	blog="$1"
+	uri="${BASEURI}${blog}/info/?api_key=${APIKEY}"
+	$GETTER "$uri"
+}
+
+post() {
+	blog="$1"
+	offset="$2"
+	uri="${BASEURI}${blog}/posts/?api_key=${APIKEY}&offset=$offset&limit=1"
+	$GETTER "$uri"
+}
+
+rndblog() {
+	n=${#SOURCES[*]}
+	n="$(echo "${n}-1" | bc)"
+	n="$(shuf -i 0-"$n" -n1)"
+	echo "${SOURCES[$n]}"
+}
+
+main() {
+	[ -z "$APIKEY" ] && die "You need to set the APIKEY variable."
+	blog="$(rndblog)"
+	nposts="$(info "$blog" | grep -oE '"total_posts":([0-9]*)' |cut -d: -f2)"
+	n="$(shuf -i 1-"$nposts" -n1)"
+	pic="$(post "$blog" "$n" |grep -oE '"original_size":{"url":"([^"]*)' |cut -b25-)"
+	echo "$blog $pic"
+}
+
+main "$@"

@@ -20,6 +20,7 @@ index
 * [mkbkp](#mkbkp) - Simple backups.
 * [setmon](#setmon) - Switch to HDMI video/audio if any.
 * [moin](#moin) - Play a random song from a YouTube playlist.
+* [fetchpic](#fetchpic) - Fetch a random pic from a random blog (of a given list).
 
 iwpick
 ------
@@ -51,6 +52,10 @@ I'm considering if implement or not a flag to connects to the best possible netw
 scrapthumb
 ----------
 Get random images from Tumblr.  
+
+Note: currently not working due to the recent Tumblr redirect to the new
+privacy policy, which you need to accept.
+
 Some sample usages in ~/.xinitrc:
 
 	# Change wallpaper each 5 minutes 
@@ -266,3 +271,33 @@ https://www.youtube.com/watch?v=xvIuuKVwY_8&list=RDEMWmz07MSPRGna5rHl5FWPRw&inde
 ```
 
 Then the ID is: RDEMWmz07MSPRGna5rHl5FWPRw
+
+fetchpic
+--------
+Fetch a random pic from a random blog (of a given list).
+
+This is [scrapthumb](#scrapthumb) rewritten from scratch and better. Now the
+Tumblr API is used so you need an [api key](https://www.tumblr.com/oauth/apps).
+
+In a nutshell:
+
+```
+# scrap="$(APIKEY=Your-Api-Key fetchpic)"
+# uri="$(echo "$scrap" |cut -d'|' -f2)"
+# feh --bg-fill --no-fehbg "$uri"
+```
+
+Put this in your `.xinitrc` to change the wallapaper each 5 minutes and append
+the pic URL and blog name into `/tmp/fetchpic`.
+
+```
+while : ; do
+	scrap="$(APIKEY=Your-Api-Key fetchpic)"
+	uri="$(echo "$scrap" |cut -d' ' -f2)"
+	feh --bg-fill --no-fehbg "$uri"
+	echo "$scrap" >> /tmp/fetchpic
+	sleep 300
+done &
+```
+
+Enjoy.
