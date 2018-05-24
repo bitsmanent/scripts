@@ -294,8 +294,8 @@ the pic URL and blog name into `/tmp/fetchpic`.
 while : ; do
 	scrap="$(APIKEY=Your-Api-Key fetchpic)"
 	uri="$(echo "$scrap" |cut -d' ' -f2)"
-	feh --bg-fill --no-fehbg "$uri"
 	echo "$scrap" >> /tmp/fetchpic
+	feh --bg-fill --no-fehbg "$uri"
 	sleep 300
 done &
 ```
