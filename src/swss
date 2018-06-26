@@ -6,7 +6,7 @@ redis-server
 mysql
 nginx
 #php5-fpm
-php7.0-fpm
+php7.2-fpm
 )
 
 massact() {
