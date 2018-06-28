@@ -19,7 +19,11 @@ run() {
 	if [ -f "$p" ]; then
 		cat "$p"
 	else
-		echo "echo $label |nc your.host $port"
+		if [ -n "$TXTHOLE_PUBHOST" ]; then
+			echo "echo $label | nc $TXTHOLE_PUBHOST $port"
+		else
+			echo "$label"
+		fi
 	fi
 }
 

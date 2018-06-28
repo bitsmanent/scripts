@@ -27,17 +27,24 @@ txthole
 -------
 Store and retrieve text stream. Given the script is up and running, here's a sample usage:
 
-```
-$ echo Hello |nc your.host 2023
-echo GmKwL |nc your.host 2023
-$ echo GmKwL |nc your.host 2023
-Hello
-$
-```
+	$ echo Hello |nc your.host 2023
+	echo GmKwL |nc your.host 2023
+	$ echo GmKwL |nc your.host 2023
+	Hello
 
 Of course you can also paste files:
 
 	$ cat /tmp/t |nc your.host 2023
+
+You can set hostname when starting txthole, like this:
+
+	$ TXTHOLE_PUBHOST=my.public.host txthole &
+
+If it's unset then txthole will only output the code instead of the whole command:
+
+	$ txthole &
+	$ echo Hello |nc your.host 2023
+	A1Syh
 
 This should be enough for most use cases.
 
