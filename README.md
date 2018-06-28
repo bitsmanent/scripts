@@ -4,6 +4,7 @@ Useful shell scripts.
 
 index
 -----
+* [txthole](#txthole) - Simple netcat-based pastebin server
 * [iwpick](#iwpick) - Connects to a network.
 * [scrapthumb](#scrapthumb) - Get random images from Tumblr.
 * [acpi](#acpi) - Simple power management.
@@ -21,6 +22,24 @@ index
 * [setmon](#setmon) - Switch to HDMI video/audio if any.
 * [moin](#moin) - Play a random song from a YouTube playlist.
 * [fetchpic](#fetchpic) - Fetch a random pic from a random blog (of a given list).
+
+txthole
+-------
+Store and retrieve text stream. Given the script is up and running, here's a sample usage:
+
+```
+$ echo Hello |nc your.host 2023
+echo GmKwL |nc your.host 2023
+$ echo GmKwL |nc your.host 2023
+Hello
+$
+```
+
+Of course you can also paste files:
+
+	$ cat /tmp/t |nc your.host 2023
+
+This should be enough for most use cases.
 
 iwpick
 ------
