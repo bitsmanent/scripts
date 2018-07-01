@@ -20,6 +20,7 @@ run() {
 		cat "$p"
 	else
 		if [ -n "$TXTHOLE_PUBHOST" ]; then
+			echo "http://$TXTHOLE_PUBHOST/$label"
 			echo "echo $label | nc $TXTHOLE_PUBHOST $port"
 		else
 			echo "$label"

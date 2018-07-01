@@ -28,6 +28,7 @@ txthole
 Store and retrieve text stream. Given the script is up and running, here's a sample usage:
 
 	$ echo Hello |nc your.host 2023
+	http://your.host/GmKwL
 	echo GmKwL |nc your.host 2023
 	$ echo GmKwL |nc your.host 2023
 	Hello
@@ -47,6 +48,27 @@ If it's unset then txthole will only output the code instead of the whole comman
 	A1Syh
 
 This should be enough for most use cases.
+
+To serve content over HTTP, use something like this (nginx):
+
+	server {
+		root /tmp/pastes/;
+		server_name your.host;
+
+		location / {
+			rewrite ^/([-.a-zA-Z0-9]+)$ "/txthole.$1.paste" last;
+		}
+
+		location ~ /txthole\.([-.a-zA-Z0-9]+)\.paste {
+			add_header Content-Type text/plain;
+		}
+	}
+
+Take care of applying the right user/permission to the pastes directory:
+
+	$ chgrp www-data /tmp/pastes
+	$ chmod g+sr /tmp/pastes # s used to keep group
+
 
 iwpick
 ------
