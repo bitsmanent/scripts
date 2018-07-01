@@ -29,11 +29,12 @@ run() {
 }
 
 main() {
-	mkdir -p "$pastes"
+	mkdir -pm 0740 "$pastes"
 	rm -f "$fifo"
 	mkfifo "$fifo"
 	while : ; do
 		paste="$(mktemp -q "$pastes/txthole.XXXXX.paste")"
+		chmod g+r "$paste" # the webserver needs to read
 		cat "$fifo" |tee -a "$paste" | run "$paste" | nc -4Nl "$port" > "$fifo"
 		[ "$(wc -c "$paste" |cut -d' ' -f1)" -eq 0 ] && rm -f "$paste"
 	done
