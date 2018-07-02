@@ -66,8 +66,8 @@ To serve content over HTTP, use something like this (nginx):
 
 Take care of applying the right user/permission to the pastes directory:
 
-	$ chgrp www-data /tmp/pastes
-	$ chmod g+sr /tmp/pastes # s used to keep group
+	# chgrp www-data /tmp/pastes
+	# chmod g+srx /tmp/pastes # s used to keep group
 
 
 iwpick
