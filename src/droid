@@ -23,6 +23,7 @@ _adb() {
 do_setup() {
 	echo "Setting up the development environment..."
 
+	[ ! -d "$BASEDIR" ] && mkdir -p "$BASEDIR"
 	cd "/tmp"
 	if [ ! -d "$BASEDIR/android-sdk-linux" ]; then
 		echo "Setting up the SDK..."
