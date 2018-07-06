@@ -14,7 +14,7 @@ index
 * [pkgsetup](#pkgsetup) - Easy pkgsrc (and -wip) for non-NetBSD systems.
 * [whexsafe](#whexsafe) - Web safe color list in hex and RGB.
 * [swss](#swss) - Start/stop a group of services.
-* [droid](#droid) - Sane Android development.
+* [droid](#droid) - Sane Android development. *deprecated*.
 * [dbrowse](#dbrowse) - Little dmenu-based file browser.
 * [diffmon](#diffmon) - Diff-based file monitor.
 * [sober](#sober) - Simple sobriety checker.
@@ -198,6 +198,7 @@ services which I use to deal with my web stack (redis, mysql, nginx, etc.).
 droid
 -----
 Sane Android Development.
+Note: this script is deprecated, see below.
 
 ```
 $ droid
@@ -213,6 +214,15 @@ Commands:
    init         : create a new project into the current directory
    clean        : remove all builds
    help         : print this help
+```
+
+You can now achieve almost the same results with the new [sdkmanager](https://developer.android.com/studio/command-line/sdkmanager) tool. For example (tarball taken from [here](https://developer.android.com/studio/)):
+
+```
+$ wget https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip
+$ unzip sdk-tools-linux-4333796.zip
+$ ./tools/bin/sdkmanager platform-tools
+# Now you have both tools/ and platform-tools/ in your curren working directory.
 ```
 
 dbrowse
