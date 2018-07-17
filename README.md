@@ -54,12 +54,13 @@ To serve content over HTTP, use something like this (nginx):
 	server {
 		root /tmp/pastes/;
 		server_name your.host;
+		index txthole.index.paste;
 
 		location / {
 			rewrite ^/([-.a-zA-Z0-9]+)$ "/txthole.$1.paste" last;
 		}
 
-		location ~ /txthole\.([-.a-zA-Z0-9]+)\.paste {
+		location ~ \.paste$ {
 			add_header Content-Type text/plain;
 		}
 	}
