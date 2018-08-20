@@ -35,7 +35,7 @@ main() {
 	while : ; do
 		paste="$(mktemp -q "$pastes/txthole.XXXXX.paste")"
 		chmod g+r "$paste" # the webserver needs to read
-		cat "$fifo" |tee -a "$paste" | run "$paste" | nc -4l "$port" > "$fifo"
+		cat "$fifo" |tee -a "$paste" | run "$paste" | nc -4Nl "$port" > "$fifo"
 		[ "$(wc -c "$paste" |cut -d' ' -f1)" -eq 0 ] && rm -f "$paste"
 	done
 	rm -f "$fifo"
