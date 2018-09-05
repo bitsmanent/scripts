@@ -9,6 +9,7 @@
 pastes="/tmp/pastes"
 fifo="/tmp/txthole.fifo"
 port="2023"
+pubhost=""
 
 run() {
 	paste="$1"
@@ -19,16 +20,18 @@ run() {
 	if [ -f "$p" ]; then
 		cat "$p"
 	else
-		if [ -n "$TXTHOLE_PUBHOST" ]; then
-			echo "http://$TXTHOLE_PUBHOST/$label"
-			echo "echo $label | nc $TXTHOLE_PUBHOST $port"
-		else
-			echo "$label"
-		fi
+		echo "$pubhost/$label"
 	fi
 }
 
 main() {
+	pubhost="$1"
+
+	if [ -z "$pubhost" ]; then
+		echo "Usage: $(basename "$0") <pubhost>"
+		exit 1
+	fi
+
 	mkdir -pm 0740 "$pastes"
 	rm -f "$fifo"
 	mkfifo "$fifo"
@@ -41,4 +44,4 @@ main() {
 	rm -f "$fifo"
 }
 
-main
+main $@
