@@ -3,6 +3,8 @@
 # Requires: wpa_supplicant, dhclient and the iwconfig suite
 
 NETWORKS_FILE=~/.networks
+newline="
+"
 
 connect() {
 	iface=$1
@@ -37,8 +39,10 @@ pickone() {
 	iface="$1"
 	file="$2"
 	ids=$(iwlist "$iface" scan |grep ESSID |cut -d'"' -f2)
-	nets=$(cat "$file")
+	nets="$(cat "$file")"
 
+	oifs="$IFS"
+	IFS="$newline"
 	for net in $nets; do
 		essid="$(echo "$net" |cut -d: -f2)"
 		for id in $ids; do
@@ -48,6 +52,7 @@ pickone() {
 			fi
 		done
 	done
+	IFS="$oifs"
 }
 
 usage() {
@@ -92,13 +97,13 @@ main() {
 	fi
 	[ -z "$alias" -a -z "$essid" ] && usage
 	if [ -n "$alias" ]; then
-		s="$(sed -n /^${alias}:/p $file |cut -d: -f2-3)"
+		s="$(sed -n "/^${alias}:/p" "$file" |cut -d: -f2-3)"
 		essid="$(echo $s |cut -d: -f1)"
 		[ -z "$essid" ] && die "alias '${alias}' not found"
 		key="$(echo $s |cut -sd: -f2)"
 	else
 		# Check the networks file to get a key
-		key="$(sed -n /:${essid}:/p $file |cut -d: -f3)"
+		key="$(sed -n "/:${essid}:/p" "$file" |cut -d: -f3)"
 	fi
 
 	echo "Connecting to ${essid}..."
