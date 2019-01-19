@@ -4,7 +4,7 @@ Useful shell scripts.
 
 index
 -----
-* [txthole](#txthole) - Simple netcat-based pastebin server
+* [txthole](#txthole) - Simple netcat-based pastebin server (also see [beans](https://git.bitmanent.org/beans/log.html))
 * [iwpick](#iwpick) - Connects to a network.
 * [scrapthumb](#scrapthumb) - Get random images from Tumblr.
 * [acpi](#acpi) - Simple power management.
@@ -25,7 +25,9 @@ index
 
 txthole
 -------
-Store and retrieve text stream. Given the script is up and running, here's a sample usage:
+Store and retrieve text stream. Superseded by
+[beans](//git.bitmanent.org/beans/log.html). Given the script is up and
+running, here's a sample usage:
 
 	$ echo Hello |nc your.host 2023
 	http://your.host/GmKwL
