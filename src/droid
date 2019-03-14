@@ -9,6 +9,9 @@ SDK_URL=https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip
 GRADLE="$BASEDIR/gradle-2.10"
 GRADLE_URL="https://services.gradle.org/distributions/gradle-2.10-bin.zip"
 
+# Remove the need to have sdk.dir in local.properties
+[ ! -f "local.properties" ] && export ANDROID_HOME="$BASEDIR"
+
 export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
 
 _adb() {
@@ -49,7 +52,7 @@ do_setup() {
 	echo "Installing platform tools and system image (android-28)..."
 	# https://stackoverflow.com/a/47346176/508196
 	#JAVA_OPTS="--add-modules java.xml.bind"
-	$SDKDIR/bin/sdkmanager "platform-tools" "platforms;android-28"
+	$SDKDIR/bin/sdkmanager "platform-tools" "platforms;android-28" "build-tools;28.0.3"
 
 	# Avoid sdklib.repository.AndroidSdkHandler class initialization error
 	#export JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk-amd64"
