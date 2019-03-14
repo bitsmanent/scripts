@@ -1,15 +1,15 @@
 #!/bin/sh
 # Sane Android development.
 
-BASEDIR=~/.android-sdk
-SDKDIR="$BASEDIR/android-sdk-linux"
-GRADLE="$BASEDIR/gradle-2.3/bin/gradle"
-ADB="$SDKDIR/platform-tools/adb"
-SDK_URL=http://dl.google.com/android/android-sdk_r24.1.2-linux.tgz
-GRADLE_URL=https://services.gradle.org/distributions/gradle-2.3-bin.zip
+BASEDIR=~/.android-toolkit
+[ -n "$DROID_BASEDIR" ] && BASEDIR="$DROID_BASEDIR"
+SDKDIR="$BASEDIR/tools"
+ADB="$BASEDIR/platform-tools/adb"
+SDK_URL=https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip
+GRADLE="$BASEDIR/gradle-2.10"
+GRADLE_URL="https://services.gradle.org/distributions/gradle-2.10-bin.zip"
 
-# Remove the need to have sdk.dir in local.properties
-[ ! -f "local.properties" ] && export ANDROID_HOME="$SDKDIR"
+export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
 
 _adb() {
 	pids="$(pgrep -f ^adb)"
@@ -24,23 +24,35 @@ do_setup() {
 	echo "Setting up the development environment..."
 
 	[ ! -d "$BASEDIR" ] && mkdir -p "$BASEDIR"
-	cd "/tmp"
-	if [ ! -d "$BASEDIR/android-sdk-linux" ]; then
+	if [ -d "$SDKDIR" ]; then
+		echo "SDK already installed. Skipping..."
+	else
 		echo "Setting up the SDK..."
-		wget -O sdk.tgz -qc "$SDK_URL"
-		tar zxf sdk.tgz -C "$BASEDIR"
+		f=/tmp/sdk.zip
+		wget -O "$f" -qc "$SDK_URL"
+		unzip -qq "$f" -d "$BASEDIR"
+		echo "Cleaning up..."
+		rm -f "$f"
 	fi
-	if [ ! -d "$BASEDIR/gradle-2.3" ]; then
+	if [ -d "$GRADLE" ]; then
+		echo "Gradle already installed. Skipping..."
+	else
 		echo "Setting up the Gradle build system..."
-		wget -O gradle.zip -qc "$GRADLE_URL"
-		unzip -qq gradle.zip -d "$BASEDIR"
+		f=/tmp/gradle.zip
+		wget -O "$f" -qc "$GRADLE_URL"
+		unzip -qq "$f" -d "$BASEDIR"
+		echo "Cleaning up..."
+		rm -f "$f"
 	fi
 	cd "$OLDPWD"
 
-	# Need to install the SDK tools, build tools and system image
-	echo "You need to manually select the features. Opening the SDK manager..."
-	$SDKDIR/tools/android 2>/dev/null
+	echo "Installing platform tools and system image (android-28)..."
+	# https://stackoverflow.com/a/47346176/508196
+	#JAVA_OPTS="--add-modules java.xml.bind"
+	$SDKDIR/bin/sdkmanager "platform-tools" "platforms;android-28"
 
+	# Avoid sdklib.repository.AndroidSdkHandler class initialization error
+	#export JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk-amd64"
 	echo "done."
 }
 
@@ -62,7 +74,7 @@ do_upload() {
 do_build() {
 	rel=$1
 	[ $rel ] && task="assembleRelease"  || task="assembleDebug"
-	$GRADLE $task
+	$GRADLE/bin/gradle $task
 }
 
 do_upgrade() {
