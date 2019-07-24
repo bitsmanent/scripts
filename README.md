@@ -219,14 +219,11 @@ Commands:
    help         : print this help
 ```
 
-You can now achieve almost the same results with the new [sdkmanager](https://developer.android.com/studio/command-line/sdkmanager) tool. For example (tarball taken from [here](https://developer.android.com/studio/)):
+You can now achieve the same results using the great
+[sdkmanager](https://developer.android.com/studio/command-line/sdkmanager) tool
+along with [gradle](https://gradle.org/releases/) on the command line. In fact,
+I started to use those tools and I will not work on droid anymore.
 
-```
-$ wget https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip
-$ unzip sdk-tools-linux-4333796.zip
-$ ./tools/bin/sdkmanager platform-tools
-# Now you have both tools/ and platform-tools/ in your curren working directory.
-```
 
 dbrowse
 ------
