@@ -149,6 +149,8 @@ It uses xmessage(1) and play(1) to alert the user.
 dwmstatus
 ---------
 Output useful informations suitable for a status bar. It's designed for dwm.
+Obsolete: use [slstatus](https://tools.suckless.org/slstatus/) instead.
+
 Sample output:
 ```
 B:89%+ T:56C W:70% V:95%  (0.23 0.21 0.22 0.16) 25/09/2015 11:15
