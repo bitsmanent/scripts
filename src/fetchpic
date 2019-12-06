@@ -11,7 +11,6 @@ SOURCES=(
 	"parallax-wallpapers.com"
 	"aerialwallpapers.tumblr.com"
 	"dressupyourtech.tumblr.com"
-	"allfullhdwallpapers.tumblr.com"
 )
 
 die() {
