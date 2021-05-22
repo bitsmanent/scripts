@@ -58,6 +58,10 @@ mexec() {
 	done
 }
 
+isfunc() {
+	type "$1" |grep -q function
+}
+
 main() {
 	cfg="$1"
 	[ -z "$cfg" ] && cfg=~/.mkbkprc
@@ -75,6 +79,8 @@ main() {
 
 	cd "$OPWD"
 	echo " done."
+
+	isfunc "onfinish" && onfinish "$BKPDIR"
 }
 
 main "$@"

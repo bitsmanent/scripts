@@ -296,6 +296,20 @@ ${HOME}/.config/chromium/Default/Bookmarks
 GITREPOS="
 git@github.com:clamiax/scripts.git
 "
+
+onfinish() {
+	t="$1.tar.bz2"
+
+	echo -n "Compressing to $t..."
+	tar jcf "$t" "$1"
+	echo " done"
+
+	echo -n "Uploading to a backup server..."
+	scp "$t" user@host:/path/of/backup
+	echo " done"
+
+	echo "Completed."
+}
 ```
 
 mkbkp only supports backup of files, directories and git repositories. Though
