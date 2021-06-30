@@ -69,7 +69,7 @@ exit 1
 }
 
 main() {
-	iface="$(ifconfig -s |grep ^wl |head -1 |cut -d ' ' -f1)"
+	iface="$(ifconfig -a -s |grep ^wl |head -1 |cut -d ' ' -f1)"
 	file="$NETWORKS_FILE"
 	alias=
 	essid=
