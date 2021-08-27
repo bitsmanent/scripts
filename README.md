@@ -81,7 +81,7 @@ Connects to a network. Authentication is not mandatory and only WPA2 is supporte
 
 You may also use an aliases file (default ~/.networks), like this:
 
-	home:MyHomeNetwork:MyHomePassord
+	home:MyHomeNetwork:MyHomePassword
 	lucky:PublicNetwork
 	
 Then use the alias to connect:
