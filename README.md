@@ -229,9 +229,9 @@ I started to use those tools and I will not work on droid anymore.
 
 dbrowse
 ------
-Little dmenu-based file browser which output the selected file (if any).
+Little dmenu-based file browser which output the selected files (if any).
 
-Sample usage:
+Sample usage (for a single file):
 
 ```
 $ mimeopen "$(/path/of/dbrowse)"
@@ -243,6 +243,9 @@ like this:
 ```
 { MODKEY|ShiftMask,		XK_o,      spawn,          SHCMD("mimeopen -n \"$(/path/of/dbrowse)\"") },
 ```
+
+Multiple selections are also supported.
+
 
 diffmon
 -------
