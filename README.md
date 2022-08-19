@@ -22,6 +22,7 @@ index
 * [setmon](#setmon) - Switch to HDMI video/audio if any.
 * [moin](#moin) - Play a random song from a YouTube playlist.
 * [fetchpic](#fetchpic) - Fetch a random pic from a random blog (of a given list).
+* [sendpush](#sendpush) - Send a PUSH notification via xdroid API
 
 txthole
 -------
@@ -378,3 +379,14 @@ done &
 ```
 
 Enjoy.
+
+sendpush
+--------
+Send a PUSH notification to your smartphone via xdroid API.
+
+```
+$ sendpush -h
+sendpush -k <key> -t <title> -c <conten> [-u <uri>]
+```
+
+Install the [app](https://play.google.com/store/apps/details?id=net.xdroid.pn) and you're done.
