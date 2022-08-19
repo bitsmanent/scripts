@@ -19,7 +19,7 @@ main() {
 		shift "$(echo "$OPTIND - 1"|bc)"
         done
 
-	[ -z "$apikey" -o -z "$title" -o -z "$content" ] && usage
+	[ -z "$apikey" -o -z "$content" ] && usage
 
 	curl --get \
 	--data-urlencode "k=$apikey" \
