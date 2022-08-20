@@ -16,8 +16,8 @@ main() {
 		u) uri="$OPTARG";;
 		h) usage;;
                 esac
-		shift "$(echo "$OPTIND - 1"|bc)"
         done
+	shift "$(echo "$OPTIND - 1"|bc)"
 
 	[ -z "$apikey" -o -z "$content" ] && usage
 
