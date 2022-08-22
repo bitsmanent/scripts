@@ -21,7 +21,7 @@ main() {
 
 	[ -z "$apikey" -o -z "$content" ] && usage
 
-	curl --get \
+	curl -s --get \
 	--data-urlencode "k=$apikey" \
 	--data-urlencode "t=$title" \
 	--data-urlencode "c=$content" \
