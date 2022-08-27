@@ -3,7 +3,7 @@
 # https://play.google.com/store/apps/details?id=net.xdroid.pn
 
 usage() {
-	echo "Usage: $0 -k <key> -t <title> -c <conten> [-u <uri>]"
+	echo "Usage: $0 [-h] -k <key> -t <title> -c <conten> [-u <uri>]"
 	exit 1
 }
 
