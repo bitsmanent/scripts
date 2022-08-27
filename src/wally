@@ -1,0 +1,88 @@
+#!/bin/sh
+#
+# TODO
+# - handle network errors
+
+rand="shuf -zn 1 -i %d-%d"
+NL="
+"
+
+d() {
+	echo "$@"
+	log "$@"
+}
+
+die() {
+	echo "$@"
+	exit 1
+}
+
+log() {
+	echo "$@" >> "$LOGFILE"
+}
+
+obj_items() {
+	items="$1"
+	index="$2"
+	n=0
+
+	oifs="$IFS"
+	IFS=" $NL	"
+	for item in $items; do
+		[ -z "$item" ] && continue
+		n="$(echo "$n+1" |bc)"
+
+		if [ ! -z "$index" -a "$index" = "$n" ]; then
+			echo -n "$item"
+			return 0
+		fi
+	done
+	IFS="$oifs"
+	echo -n "$n"
+}
+
+isfunc() {
+	type $1 |grep -q function
+}
+
+usage() {
+	echo "Usage: $0 [-h] -f <file>"
+	exit 1
+}
+
+main() {
+	config=~/.wallyrc
+        while getopts "f:h" o; do
+                case $o in
+		f) config="$OPTARG";;
+		h) usage;;
+                esac
+        done
+	shift "$(echo "$OPTIND - 1"|bc)"
+
+	[ -z "$config" ] && die "$0: missing configuration"
+	. "$config"
+
+	totservices="$(obj_items "$ENABLED_SERVICES")"
+	log "Running on $(date)..."
+
+	while true;
+	do
+		index="$($(printf "$rand" 1 "$totservices"))"
+		service="$(obj_items "$ENABLED_SERVICES" "$index")"
+		use="${service}_use"
+		isfunc "$use" || use=useresult
+		res="$($service)"
+		err=$?
+
+		if [ $err -ne 0 ]; then
+			log "ERROR: $service: $res"
+		else
+			$use "$res"
+		fi
+
+		sleep "$DELAY"
+	done
+}
+
+main "$@"

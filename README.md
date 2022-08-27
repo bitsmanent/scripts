@@ -23,6 +23,7 @@ index
 * [moin](#moin) - Play a random song from a YouTube playlist.
 * [fetchpic](#fetchpic) - Fetch a random pic from a random blog (of a given list).
 * [sendpush](#sendpush) - Send a PUSH notification via xdroid API
+* [wally](#wally) - Change random wallpapers taken from the web
 
 txthole
 -------
@@ -390,3 +391,108 @@ sendpush -k <key> -t <title> -c <conten> [-u <uri>]
 ```
 
 Install the [app](https://play.google.com/store/apps/details?id=net.xdroid.pn) and you're done.
+
+wally
+-----
+Change random wallpapers taken from the web.
+
+```
+$ wally -h
+Usage: wally [-h] -f <file>
+```
+
+A configuration file is required to instruct `wally` about where to take
+images, how to filter them, how much wait for the next rotation, etc.
+
+Here is a sample file which support [Pexels](https://www.pexels.com) and
+[wttr](https://wttr.in/):
+
+```
+# wally settings
+
+ENABLED_SERVICES="pexels wttr"
+DELAY=300
+LOGFILE="/tmp/wally.log"
+useresult() {
+	feh --bg-max --no-fehbg "$1"
+}
+
+##
+# pexels
+# https://www.pexels.com/it-it/api/documentation
+##
+pexels_apikey="your-api-key"
+pexels_opts="auto=compress&cs=tinysrgb&fit=crop&w=1920&h=1080"
+pexels_items="space:3000 rain:1000 sexy%20woman:10000 architecture:8000"
+pexels() {
+	nitems="$(obj_items "$pexels_items")"
+	index="$($(printf "$rand" 1 "$nitems"))"
+	item="$(obj_items "$pexels_items" "$index")"
+	query="$(echo -n "$item" |cut -d':' -f1)"
+	npages="$(echo -n "$item" |cut -d':' -f2)"
+	page="$($(printf "$rand" 1 "$npages"))"
+	qs="per_page=1&page=$page&query=$query"
+	uri="https://api.pexels.com/v1/search?$qs"
+	json="$(curl -sH "Authorization: $pexels_apikey" "$uri")"
+	original="$(echo "$json" |sed -n 's/.*"original":"\([^"]*\).*/\1/p')"
+
+	log "Pexels $query #$page $original"
+
+	[ "$npages" -gt 10000 ] && die "max pages is 10000 (current: $npages)"
+	[ -z "$original" ] && die "no results"
+	echo "$original?$pexels_opts"
+	return 0
+}
+
+##
+# wttr
+# https://wttr.in/:help
+##
+wttr_lang="it"
+wttr_items="_pF.png /moon_pF.png"
+wttr() {
+	nitems="$(obj_items "$wttr_items")"
+	index="$($(printf "$rand" 1 "$nitems"))"
+	item="$(obj_items "$wttr_items" "$index")"
+	uri="https://$wttr_lang.wttr.in${item}"
+
+	log "wttr $item $uri"
+	echo "$uri"
+	return 0
+}
+```
+
+You can add any service you wish. Just create a function to fetch the random
+images and add its name into the `$ENABLED_SERVICES` variable. If you need to
+refine how the wallpaper is set you can also define a `_use` function which
+will be called instead of the default `useresult()`.
+
+A non-zero return value tell `wally` to write an error on the log file
+including any eventual output. It also prevent the `_use()` function to be
+called. The `die()` function may be used for convenience (see below).
+
+Actually, your function may produce any output (not necessarly an URL or a
+local filename) and inside `_use()` you may do anything you want without need
+to manage wallpapers at all.
+
+For instance, here is service to produce random numbers:
+
+rnum() {
+	n="$(shuf -n1 -i 10000-99999)"
+
+	# $n == 12345 throw an error
+	[ "$n" -eq 12345 ] && die "got exactly 12345"
+}
+
+rnum_use() {
+	xmessage -center "Random number: $1"
+}
+
+A few convenient functions are availables:
+
+- obj_items: count items in a list or return the given one
+- log: append the argument to `$LOGFILE`
+- die: print the argument and exit with code 1
+- d: print and log the argument
+
+See the `wally` script itself for details.
