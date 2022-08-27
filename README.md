@@ -477,6 +477,7 @@ to manage wallpapers at all.
 
 For instance, here is service to produce random numbers:
 
+```
 rnum() {
 	n="$(shuf -n1 -i 10000-99999)"
 
@@ -487,6 +488,7 @@ rnum() {
 rnum_use() {
 	xmessage -center "Random number: $1"
 }
+```
 
 A few convenient functions are availables:
 
