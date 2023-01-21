@@ -88,7 +88,7 @@ main() {
 		esac
 	done
 
-	[ "$(id -u)" -ne 0 ] && die "You must be root"
+	[ "$(id -u)" -ne 0 -a ! -u "$0" ] && die "You must be root"
 	if [ $pick -eq 1 ]; then
 		echo "Looking for a suitable network... "
 		essid="$(pickone "$iface" "$file")"
