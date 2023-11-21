@@ -396,6 +396,11 @@ wally
 -----
 Change random wallpapers taken from the web.
 
+Note: I do not use nor mantain `wally` anymore. Random images rotation is nice
+it but cannot always guarantee high quality results thus I decided to use a
+curated list of images from a Pexel collection with a script like
+[this](https://gist.github.com/bitsmanent/6ce604a5f09bd77b59fbbdf9dab818d1).
+
 ```
 $ wally -h
 Usage: wally [-h] -f <file>
