@@ -10,6 +10,8 @@ connect() {
 	iface=$1
 	essid=$2
 	key=$3
+	addr="$4"
+	gw="$5"
 
 	iwconfig $iface essid "$essid"
 	if [ -n "$key" ]; then
@@ -18,14 +20,18 @@ connect() {
 		wpa_supplicant -i $iface -c "$tmp" -B 2>&1 > /dev/null
 		rm $tmp
 	fi
-	dhclient $iface >/dev/null &
-	while [ -z "$gw" ]; do
-		pkt="$(tcpdump -vlni $iface -c 1 -Q in udp 2>&1)"
-		addr="$(echo "$pkt" |grep "Your-IP" |tr -d [:space:] |cut -b8-)"
-		dgw="$(echo "$pkt" |grep "Gateway-IP" |tr -d [:space:] |cut -b11-)"
-		egw="$(echo "$pkt" |grep "Default-Gateway" |tr -d [:space:] |cut -d: -f2)"
-		[ -n "$dgw" ] && gw="$dgw" || gw="$egw"
-	done
+
+	# if no addr then use dhcp
+	if [ -z "$addr" ]; then
+		dhclient $iface >/dev/null &
+		while [ -z "$gw" ]; do
+			pkt="$(tcpdump -vlni $iface -c 1 -Q in udp 2>&1)"
+			addr="$(echo "$pkt" |grep "Your-IP" |tr -d [:space:] |cut -b8-)"
+			dgw="$(echo "$pkt" |grep "Gateway-IP" |tr -d [:space:] |cut -b11-)"
+			egw="$(echo "$pkt" |grep "Default-Gateway" |tr -d [:space:] |cut -d: -f2)"
+			[ -n "$dgw" ] && gw="$dgw" || gw="$egw"
+		done
+	fi
 	ifconfig $iface $addr
 	route add default gw $gw
 }
@@ -96,10 +102,12 @@ main() {
 	fi
 	[ -z "$alias" -a -z "$essid" ] && usage
 	if [ -n "$alias" ]; then
-		s="$(sed -n "/^${alias}:/p" "$file" |cut -d: -f2-3)"
-		essid="$(echo $s |cut -d: -f1)"
+		s="$(sed -n "/^${alias}:/p" "$file")"
+		essid="$(echo $s |cut -d: -f2)"
 		[ -z "$essid" ] && die "alias '${alias}' not found"
-		key="$(echo $s |cut -sd: -f2)"
+		key="$(echo $s |cut -sd: -f3)"
+		addr="$(echo $s |cut -sd: -f4)"
+		gw="$(echo $s |cut -sd: -f5)"
 	else
 		# Check the networks file to get a key
 		key="$(sed -n "/:${essid}:/p" "$file" |cut -d: -f3)"
@@ -115,7 +123,7 @@ main() {
 	do
 		pkill -f "$a"
 	done
-	connect "$iface" "$essid" "$key"
+	connect "$iface" "$essid" "$key" "$addr" "$gw"
 }
 
 main "$@"
