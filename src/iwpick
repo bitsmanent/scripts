@@ -32,8 +32,8 @@ connect() {
 			[ -n "$dgw" ] && gw="$dgw" || gw="$egw"
 		done
 	fi
-	ifconfig $iface $addr
-	route add default gw $gw
+	[ -n "$addr" ] && ifconfig $iface $addr
+	[ -n "$gw" ] && route add default gw $gw
 }
 
 die() {
@@ -53,7 +53,7 @@ pickone() {
 		essid="$(echo "$net" |cut -d: -f2)"
 		for id in $ids; do
 			if [ "$id" = "$essid" ]; then
-				echo "$essid"
+				echo "$net"
 				return
 			fi
 		done
@@ -95,25 +95,27 @@ main() {
 	done
 
 	[ "$(id -u)" -ne 0 -a ! -u "$0" ] && die "You must be root"
-	if [ $pick -eq 1 ]; then
-		echo "Looking for a suitable network... "
-		essid="$(pickone "$iface" "$file")"
-		[ -z "$essid" ] && die "no network found."
-	fi
-	[ -z "$alias" -a -z "$essid" ] && usage
 	if [ -n "$alias" ]; then
-		s="$(sed -n "/^${alias}:/p" "$file")"
-		essid="$(echo $s |cut -d: -f2)"
-		[ -z "$essid" ] && die "alias '${alias}' not found"
-		key="$(echo $s |cut -sd: -f3)"
-		addr="$(echo $s |cut -sd: -f4)"
-		gw="$(echo $s |cut -sd: -f5)"
+		net="$(sed -n "/^${alias}:/p" "$file")"
+		[ -z "$net" ] && die "alias '${alias}' not found"
+	elif [ $pick -eq 1 ]; then
+		echo "Looking for a suitable network... "
+		net="$(pickone "$iface" "$file")"
+		[ -z "$net" ] && die "no network found."
+	fi
+
+	if [ -n "$net" ]; then
+		essid="$(echo $net |cut -d: -f2)"
+		key="$(echo $net |cut -sd: -f3)"
+		addr="$(echo $net |cut -sd: -f4)"
+		gw="$(echo $net |cut -sd: -f5)"
 	else
 		# Check the networks file to get a key
 		key="$(sed -n "/:${essid}:/p" "$file" |cut -d: -f3)"
 	fi
 
 	echo "Connecting to ${essid}..."
+
 	# If explicitly specified, check if the ESSID do exists
 	valid="$(iwlist $iface scan |grep ESSID |grep -wc "$essid")"
 	[ $valid -eq 0 ] && die "$essid: no network found"
