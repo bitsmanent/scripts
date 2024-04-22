@@ -102,17 +102,14 @@ main() {
 		echo "Looking for a suitable network... "
 		net="$(pickone "$iface" "$file")"
 		[ -z "$net" ] && die "no network found."
+	else
+		usage
 	fi
 
-	if [ -n "$net" ]; then
-		essid="$(echo $net |cut -d: -f2)"
-		key="$(echo $net |cut -sd: -f3)"
-		addr="$(echo $net |cut -sd: -f4)"
-		gw="$(echo $net |cut -sd: -f5)"
-	else
-		# Check the networks file to get a key
-		key="$(sed -n "/:${essid}:/p" "$file" |cut -d: -f3)"
-	fi
+	essid="$(echo $net |cut -d: -f2)"
+	key="$(echo $net |cut -sd: -f3)"
+	addr="$(echo $net |cut -sd: -f4)"
+	gw="$(echo $net |cut -sd: -f5)"
 
 	echo "Connecting to ${essid}..."
 
