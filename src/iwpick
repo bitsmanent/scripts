@@ -9,6 +9,8 @@ newline="
 SCANRETRIES=3
 SCANWAITSEC=3
 
+ARGV0="$(basename "$0")"
+
 connect() {
 	iface=$1
 	essid=$2
@@ -40,7 +42,7 @@ connect() {
 }
 
 die() {
-	echo "$0: $@"
+	echo "$ARGV0: $@"
 	exit 1
 }
 
@@ -84,7 +86,7 @@ pickone() {
 }
 
 usage() {
-echo -n "Usage: $0 [-hg] [-i <iface>] [-e <essid>] [-k <psk>] [-a <alias>]
+echo -n "Usage: $ARGV0 [-hg] [-i <iface>] [-e <essid>] [-k <psk>] [-a <alias>]
 -i <iface>	Network interface
 -a <alias>	Use the specified alias to connect
 -e <essid>	ESSID of the network to connect
