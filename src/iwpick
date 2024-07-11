@@ -6,6 +6,9 @@ NETWORKS_FILE=~/.networks
 newline="
 "
 
+SCANRETRIES=3
+SCANWAITSEC=3
+
 connect() {
 	iface=$1
 	essid=$2
@@ -16,7 +19,7 @@ connect() {
 	iwconfig $iface essid "$essid"
 	if [ -n "$key" ]; then
 		tmp=$(mktemp)
-		echo -n "$key" | wpa_passphrase "$essid" >> $tmp
+		echo -n "$key" | wpa_passphrase "$essid" >> $tmp 2>/dev/null
 		wpa_supplicant -i $iface -c "$tmp" -B 2>&1 > /dev/null
 		rm $tmp
 	fi
@@ -32,8 +35,8 @@ connect() {
 			[ -n "$dgw" ] && gw="$dgw" || gw="$egw"
 		done
 	fi
-	[ -n "$addr" ] && ifconfig $iface $addr
-	[ -n "$gw" ] && route add default gw $gw
+	[ -n "$addr" ] && ifconfig $iface $addr 2>/dev/null
+	[ -n "$gw" ] && route add default gw $gw 2>/dev/null
 }
 
 die() {
@@ -41,10 +44,29 @@ die() {
 	exit 1
 }
 
+emsg() {
+	echo "$@" > /dev/stderr
+}
+
 pickone() {
 	iface="$1"
 	file="$2"
-	ids=$(iwlist "$iface" scan |grep ESSID |cut -d'"' -f2)
+	retry="$3"
+	#ids=$(iwlist "$iface" scan |grep ESSID |cut -d'"' -f2)
+	scanned="$(iwlist "$iface" scan 2> /dev/null)"
+	rv=$?
+
+	if [ $rv -ne 0 ]; then
+		[ -z "$retry" ] && retry=1
+		emsg "Device busy. Retry in $SCANWAITSEC seconds ($retry/$SCANRETRIES)..."
+		[ $retry -eq $SCANRETRIES ] && exit 1
+		sleep "$SCANWAITSEC"
+		retry="$(echo "$retry + 1" | bc)"
+		pickone "$iface" "$file" "$retry"
+		exit $?
+	fi
+
+	ids="$(echo "$scanned" |grep ESSID | cut -d'"' -f2)"
 	nets="$(cat "$file")"
 
 	oifs="$IFS"
@@ -123,6 +145,7 @@ main() {
 		pkill -f "$a"
 	done
 	connect "$iface" "$essid" "$key" "$addr" "$gw"
+	echo "Connected."
 }
 
 main "$@"
