@@ -116,7 +116,13 @@ main() {
 		esac
 	done
 
-	[ "$(id -u)" -ne 0 -a ! -u "$0" ] && die "You must be root"
+	uid="$(id -u)"
+	if [ "$uid" -ne 0 ]; then
+		[ ! -u "$0" ] && die "You must be root."
+		sudo HOME="$HOME" $0 $@
+		exit $?
+	fi
+
 	if [ -n "$alias" ]; then
 		net="$(sed -n "/^${alias}:/p" "$file")"
 		[ -z "$net" ] && die "alias '${alias}' not found"
